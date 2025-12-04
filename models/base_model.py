@@ -1,5 +1,5 @@
 from peewee import Model
-from creacion_tablas import db
+from database import db
 
 class BaseModel(Model):
     class Meta:
