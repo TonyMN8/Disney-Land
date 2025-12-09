@@ -1,7 +1,7 @@
 from database import db, conectar_db
 from models.visitante_model import VisitanteModel
 from models.atraccion_model import AtraccionModel
-from models.ticket_model import TicketModel
+from models.tickets_model import TicketModel
 
 def crear_tablas():
     """Crear todas las tablas en la base de datos"""
