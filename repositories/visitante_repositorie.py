@@ -15,7 +15,7 @@ visitante1 = VisitanteRepositorie.crear_visitante(
 )
 
 if visitante1:
-    print(f"✓ Visitante creado: {visitante1.nombre} (ID: {visitante1.id})")
+    print(f"Visitante creado: {visitante1.nombre} (ID: {visitante1.id})")
 
 # Ejemplo 2: Crear un visitante con preferencias personalizadas
 visitante2 = VisitanteRepositorie.crear_visitante(
