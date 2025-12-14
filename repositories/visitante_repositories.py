@@ -1,6 +1,6 @@
-from creacion_tablas import inicializar_base
+from creacion_tablas import inicializar_base # type: ignore
 from models.visitante_model import VisitanteModel
-from repositories.visitante_repositorie import VisitanteRepositorie
+from repositories.visitante_repositories import VisitanteRepositorie
 from datetime import datetime
 
 # Inicializar las tablas (solo la primera vez o si quieres reiniciar)

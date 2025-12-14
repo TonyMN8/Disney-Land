@@ -1,8 +1,8 @@
 # importamos el modelo base:
 from models.base_model import BaseModel
 # importamos las dependencias.
-from peewee import *
-from playhouse.postgres_ext import BinaryJSONField
+from peewee import * # type: ignore
+from playhouse.postgres_ext import BinaryJSONField # type: ignore
 from datetime import datetime
 
 class VisitanteModel(BaseModel):
