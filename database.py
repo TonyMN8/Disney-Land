@@ -1,31 +1,32 @@
-from peewee import PostgresqlDatabase
-import os
-from dotenv import load_dotenv
+from peewee import * # type: ignore
+import envyte  # type: ignore
 
-load_dotenv()
-
-# Obtener variables de entorno
-DB_NAME = os.getenv("DB_NAME")
-DB_USER = os.getenv("DB_USER")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_HOST = os.getenv("DB_HOST")
-DB_PORT = int(os.getenv("DB_PORT", 5432))  # por si no está definida
-
-# Crear la conexión a Supabase
 db = PostgresqlDatabase(
-    DB_NAME,
-    user=DB_USER,
-    password=DB_PASSWORD,
-    host=DB_HOST,
-    port=DB_PORT,
-    sslmode="require"  # obligatorio para Supabase
+    envyte.get("SUPABASE_DB_NAME"),
+    host=envyte.get("SUPABASE_DB_HOST"),
+    port=int(envyte.get("SUPABASE_DB_PORT")),
+    user=envyte.get("SUPABASE_DB_USER"),
+    password=envyte.get("SUPABASE_DB_PASSWORD")
 )
 
-# Probar conexión
-if __name__ == "__main__":
+def conectar_db():
+    # Conexion a la base de datos, modo de prueba: # Tony
     try:
         db.connect()
-        print("Conexión exitosa a Supabase!")
-        db.close()
+        print("Conexion con la base de datos")
     except Exception as e:
-        print("Error al conectar:", e)
+        print(f"Error al conectar: {e}")
+
+def cerrar_db():
+    try:
+        if not db.is_closed():
+            db.close()
+            print("BASE DE DATOS: Conexión cerrada")
+        else:
+            print("BASE DE DATOS: La conexión ya estaba cerrada")
+    except Exception as e:
+        print("ERROR: No se ha podido cerrar la conexion de la base de datos.")
+
+# Llamadas a la conexion y al cierre temporal, esto se debe cambiar:
+conectar_db()
+cerrar_db()
