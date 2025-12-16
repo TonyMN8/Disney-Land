@@ -14,7 +14,7 @@ class VisitanteRepository:
                 "restricciones": [],
                 "historial_visitas": []
             }
-
+        # Excepción por si falla a la hora de crear el visitante:
         try:
             visitante = VisitanteModel.create(
                 nombre=nombre,
@@ -22,7 +22,7 @@ class VisitanteRepository:
                 altura=altura,
                 preferencias=preferencias
             )
-            print(f"INFO: Visitante creado: {visitante.nombre}")
+            print(f"INFO: Se ha creado el visitante: ({visitante.nombre}) con correo: {visitante.email}")
         except Exception as e:
             print(f"ERROR: No se ha podido crear el visitante: {e}")
 
@@ -32,10 +32,9 @@ class VisitanteRepository:
         visitantes = VisitanteModel.select()
         if visitantes:
             for recorrerVisitantes in visitantes:
-
                 if recorrerVisitantes.preferencias:
                     preferencia = recorrerVisitantes.preferencias
-  
+                # Mostramos el visitante:
                 print(
                     f"ID: {recorrerVisitantes.id}, "
                     f"Nombre: {recorrerVisitantes.nombre}, " 
@@ -53,11 +52,22 @@ class VisitanteRepository:
     @staticmethod
     def obtener_por_id(visitante_correo):
         visitantes = VisitanteModel.select().where(VisitanteModel.email == visitante_correo)
-        encontrado = False
-        for recorrerVisitantes in visitantes:
-            print(f"Visitante encontrado: {recorrerVisitantes.nombre} - Email: {recorrerVisitantes.email}")
-            encontrado = True
-        if not encontrado:
+        if visitantes:
+            for recorrerVisitantes in visitantes:
+                if recorrerVisitantes.preferencias:
+                    preferencia = recorrerVisitantes.preferencias
+                # Mostramos el visitante:
+                print(
+                    f"ID: {recorrerVisitantes.id}, "
+                    f"Nombre: {recorrerVisitantes.nombre}, " 
+                    f"Email: {recorrerVisitantes.email}, "
+                    f"Altura: {recorrerVisitantes.altura} cm, "
+                    f"Fecha de registro: {recorrerVisitantes.fecha_registro}, "
+                    f"Tipo favorito: {preferencia.get('tipo_favorito')}, "
+                    f"Restricciones: {preferencia.get('restricciones')}, "
+                    f"Historial visitas: {preferencia.get('historial_visitas')}"
+                    )
+        else:
             print(f"INFO: No existe ningun visitante registrado con el correo: {visitante_correo}")
 
     # ELIMINAR UN VISITANTE POR SU ID:
