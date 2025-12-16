@@ -1,10 +1,13 @@
-# importamos el modelo base:
+# IMPORTACIONES.
+# Modelo Base.
 from models.base_model import BaseModel
-# importamos las dependencias.
+# Dependencias
 from peewee import * # type: ignore
 from playhouse.postgres_ext import BinaryJSONField # type: ignore
 from datetime import datetime
 
+# Modelo que representa la tabla "atracciones".
+# Hereda de BaseModel para usar la conexión a la base de datos.
 class VisitanteModel(BaseModel):
     id = AutoField()
     nombre = CharField(null=False)
@@ -13,8 +16,10 @@ class VisitanteModel(BaseModel):
     fecha_registro = DateTimeField(default=datetime.now)
     preferencias = BinaryJSONField(null=True, default=lambda: {
         "tipo_favorito": "",
-        "restricciones": [""],
-        "historial_visitas": [
-            {"fecha": "", "atracciones_visitadas": ""}
-        ]
+        "restricciones": [],
+        "historial_visitas": []
     })
+    
+    # Especificamos la tabla visitantes en la base de datos.
+    class Meta:
+        table_name = 'visitantes'
