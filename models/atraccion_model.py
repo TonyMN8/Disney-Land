@@ -1,10 +1,13 @@
-# importamos el modelo base:
+# IMPORTACIONES.
+# Modelo Base.
 from models.base_model import BaseModel
-# importamos las dependencias.
+# Dependencias
 from peewee import * # type: ignore
 from playhouse.postgres_ext import BinaryJSONField # type: ignore
 from datetime import date
 
+# Modelo que representa la tabla "atracciones".
+# Hereda de BaseModel para usar la conexión a la base de datos.
 class AtraccionModel(BaseModel):
     id = AutoField()
     nombre = CharField(unique=True, null=False)
