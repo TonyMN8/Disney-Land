@@ -11,7 +11,7 @@ from datetime import datetime
 class VisitanteModel(BaseModel):
     id = AutoField()
     nombre = CharField(null=False)
-    email = CharField(unique=True, constraints=[Check("email LIKE '%@%'")])
+    email = CharField(unique=True)
     altura = IntegerField()
     fecha_registro = DateTimeField(default=datetime.now)
     preferencias = BinaryJSONField(null=True, default=lambda: {
