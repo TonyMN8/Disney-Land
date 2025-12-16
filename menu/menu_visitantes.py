@@ -9,8 +9,8 @@ class MenuVisitantes:
             print("👥 MENU: GESTION DE VISITANTES")
             print("\n1. Crear visitante.")
             print("2. Listar todos los visitantes.")
-            print("2. Buscar visitante por email.")
-            print("3. Eliminar visitante.")
+            print("3. Buscar visitante por email.")
+            print("4. Eliminar visitante.")
             print("0. Volver al menú principal.")
             
             opcion = input("\n➤  Selecciona una opcion: ").strip()
@@ -18,9 +18,9 @@ class MenuVisitantes:
             
             if opcion == "1":
                 self._crear_visitante()
-            if opcion == "2":
+            elif opcion == "2":
                 self._listar_visitantes()
-            if opcion == "3":
+            elif opcion == "3":
                 self._buscar_por_email()
            
             elif opcion == "0":
