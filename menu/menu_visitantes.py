@@ -3,7 +3,6 @@ import json
 
 # Menu para gestionar los visitantes:
 class MenuVisitantes:
-
     # Esctructura base:
     def mostrar(self):
         while True:
@@ -19,6 +18,10 @@ class MenuVisitantes:
             
             if opcion == "1":
                 self._crear_visitante()
+            if opcion == "2":
+                self._listar_visitantes()
+            if opcion == "3":
+                self._buscar_por_email()
            
             elif opcion == "0":
                 break
@@ -29,7 +32,7 @@ class MenuVisitantes:
     
     # METODO AL CREAR EL VISITANTE:
     def _crear_visitante (self):
-        print("MENU: CREAR UN VISITANTE.")
+        print("MENU VISITANTES: CREAR UN VISITANTE.")
 
         # VALIDAR NOMBRE:
         while True:
@@ -106,3 +109,32 @@ class MenuVisitantes:
 
         except Exception as e:
             print("ERROR: No se ha podido crear el visitante:", e)
+
+    # LISTAR TODOS LOS VISITANTES:
+    def _listar_visitantes(self):
+        print("MENU VISITANTES: LISTA DE TODOS LOS VISITANTES:")
+        VisitanteRepository.obtener_todos()
+
+    # BUSCAR POR EMAIL
+    def _buscar_por_email(self):
+        email = input("Introduce el email del visitante: ").strip()
+        VisitanteRepository.obtener_por_id(email)
+
+    def _eliminar_visitante(self):
+        try:
+            visitante_id = int(input("Introduce la ID del visitante que vas a liminar: "))
+        except ValueError:
+            print("ERROR: Debes ingresar una ID valida.")
+            return
+
+        # Confirmación antes de eliminar
+        while True:
+            confirm = input(f"¿Estás seguro de que deseas eliminar el visitante con ID {visitante_id}? (S/N): ").strip().upper()
+            if confirm == "S":
+                VisitanteRepository.eliminar(visitante_id)
+                break
+            elif confirm == "N":
+                print("INFO: Cancelas la operacion, no se ha eliminado el visitante.")
+                break
+            else:
+                print("INFO: Debes responder (S)i / (N)o")
