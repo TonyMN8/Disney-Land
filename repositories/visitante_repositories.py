@@ -1,12 +1,7 @@
 # IMPORTACIONES.
 # Modelos relacionados con otras clases:
 from models.visitante_model import VisitanteModel
-from models.tickets_model import TicketModel
-# Dependencias
-from peewee import * # type: ignore
-from datetime import date
-''' Extensiones y utilidades adicionales para trabajar con JSON: '''
-from playhouse.postgres_ext import BinaryJSONField # type: ignore
+# from models.tickets_model import TicketModel
 
 class VisitanteRepository:
     

@@ -8,7 +8,7 @@ from database import db
 
  # Defimos la clase BaseModel, es una clase base que heredará de peewee.
     # Esta clase se usará como padre para todos los modelos de la aplicación.
-    
+
 class BaseModel(Model):
     class Meta:
         database = db

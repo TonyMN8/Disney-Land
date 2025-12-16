@@ -1,7 +1,8 @@
 from peewee import * # type: ignore
 import envyte  # type: ignore
+from playhouse.postgres_ext import PostgresqlExtDatabase  # type: ignore
 
-db = PostgresqlDatabase(
+db = PostgresqlExtDatabase(
     envyte.get("SUPABASE_DB_NAME"),
     host=envyte.get("SUPABASE_DB_HOST"),
     port=int(envyte.get("SUPABASE_DB_PORT")),
@@ -10,7 +11,6 @@ db = PostgresqlDatabase(
 )
 
 def conectar_db():
-    # Conexion a la base de datos, modo de prueba: # Tony
     try:
         db.connect()
         print("Conexion con la base de datos")
@@ -22,11 +22,5 @@ def cerrar_db():
         if not db.is_closed():
             db.close()
             print("BASE DE DATOS: Conexión cerrada")
-        else:
-            print("BASE DE DATOS: La conexión ya estaba cerrada")
     except Exception as e:
-        print("ERROR: No se ha podido cerrar la conexion de la base de datos.")
-
-# Llamadas a la conexion y al cierre temporal, esto se debe cambiar:
-conectar_db()
-cerrar_db()
+        print(f"ERROR: No se ha podido cerrar la conexion de la base de datos.")
