@@ -32,9 +32,22 @@ class VisitanteRepository:
         visitantes = VisitanteModel.select()
         if visitantes:
             for recorrerVisitantes in visitantes:
-                print(f"ID: {recorrerVisitantes.id} - Nombre: {recorrerVisitantes.nombre} - Email: {recorrerVisitantes.email}")
+
+                if recorrerVisitantes.preferencias:
+                    preferencia = recorrerVisitantes.preferencias
+  
+                print(
+                    f"ID: {recorrerVisitantes.id}, "
+                    f"Nombre: {recorrerVisitantes.nombre}, " 
+                    f"Email: {recorrerVisitantes.email}, "
+                    f"Altura: {recorrerVisitantes.altura} cm, "
+                    f"Fecha de registro: {recorrerVisitantes.fecha_registro}, "
+                    f"Tipo favorito: {preferencia.get('tipo_favorito')}, "
+                    f"Restricciones: {preferencia.get('restricciones')}, "
+                    f"Historial visitas: {preferencia.get('historial_visitas')}"
+                    )
         else:
-            print("No hay visitantes registrados.")
+            print("INFO: No hay ningun visitante registrado.")
    
     # OBTENER UN VISITANTE POR SU CORREO ELECTRONICO:
     @staticmethod
