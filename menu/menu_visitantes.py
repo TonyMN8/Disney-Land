@@ -72,8 +72,23 @@ class MenuVisitantes:
 
             # En caso de querer preferencias:
             if opt == "S":
-                tipo_favorito = input("Tipo favorito: ").strip()
-                restricciones = input("Restricciones (Ejemplos: altura, vegano, panico extremo): ").strip()
+                
+                # VALIDAR TIPO FAVORITO:
+                while True:
+                    tipo_favorito = input("Tipo favorito: ").strip()
+                    if tipo_favorito:
+                        break
+                    else:
+                        print("ERROR: Debes incluir un tipo favorito")
+
+                # VALIDAR RESTRICCIONES:
+                while True:
+                    restricciones = input("Restricciones (Ejemplos: altura, vegano, panico extremo): ").strip()
+                    if restricciones:
+                        break
+                    else:
+                        print("ERROR: Debes incluir una restriccion")
+                
                 # Si introducimos una restriccion:
                 if restricciones:
                     restricciones_coma = restricciones.split(",")
@@ -89,12 +104,17 @@ class MenuVisitantes:
                 preferencias = {
                     "tipo_favorito": tipo_favorito,
                     "restricciones": restricciones,
-                    "historial_visitas": [] # Al crear el visitante siempre tendra un historial de visitas vacio.
+                    "historial_visitas": "0" # Al crear el visitante siempre tendra un historial de visitas vacio.
                 }
                 break # Salimos del bucle.
             
             elif  opt == "N":
                 print("INFO: No incluyes preferencias al visitante.")
+                preferencias = {
+                    "tipo_favorito": "No especificado",
+                    "restricciones": "Sin restriccion",
+                    "historial_visitas": "0" # Al crear el visitante siempre tendra un historial de visitas vacio.
+                }
                 break # Salimos del bucle.
             else:
                 print("INFO: Debes responder (S)i / (N)o")
