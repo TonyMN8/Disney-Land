@@ -13,7 +13,7 @@ class VisitanteModel(BaseModel):
     nombre = CharField(null=False)
     email = CharField(unique=True)
     altura = IntegerField()
-    fecha_registro = DateTimeField(default=datetime.now)
+    fecha_registro = DateTimeField(default=lambda: datetime.now().replace(microsecond=0)) # Truncamos los segundos, función encontrada en internet. 
     preferencias = BinaryJSONField(null=True, default=lambda: {
         "tipo_favorito": "",
         "restricciones": [],
