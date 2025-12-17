@@ -138,17 +138,30 @@ class MenuVisitantes:
 
     # ____ LISTAR TODOS LOS VISITANTES ____
     def _listar_visitantes(self):
+        listar_visitantes = VisitanteRepository.obtener_todos()
+        if not listar_visitantes:
+            return
+        
         print("MENU VISITANTES: LISTA DE TODOS LOS VISITANTES:")
-        VisitanteRepository.obtener_todos()
 
     # ____ BUSCAR POR EMAIL ____
     def _buscar_por_email(self):
+        listar_visitantes = VisitanteRepository.obtener_todos()
+        if not listar_visitantes:
+            return
+        
         email = input("Introduce el email del visitante: ").strip()
         VisitanteRepository.obtener_por_id(email)
 
     # ____ ELIMINAR VISITANTE ____
     def _eliminar_visitante(self):
+        listar_visitantes = VisitanteRepository.obtener_todos()
+
+        if not listar_visitantes:
+            return
+
         try:
+            self._listar_visitantes()
             visitante_id = int(input("Introduce la ID del visitante que vas a liminar: "))
         except ValueError:
             print("ERROR: Debes ingresar una ID valida.")
