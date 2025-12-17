@@ -1,9 +1,13 @@
+# IMPORTACIONES.
+# repositorios relacionados:
 from repositories.visitante_repositories import VisitanteRepository
 import json
 
-# Menu para gestionar los visitantes:
+# Clase MenuVisitantes
+# Agrupa toda la lógica relacionada con la gestión de visitantes:
+# mostrar menú, crear, listar, buscar y eliminar visitantes
 class MenuVisitantes:
-    # Esctructura base:
+    # ____ MENU VISITANTES ____:
     def mostrar(self):
         while True:
             print("👥 MENU: GESTION DE VISITANTES")
@@ -22,6 +26,8 @@ class MenuVisitantes:
                 self._listar_visitantes()
             elif opcion == "3":
                 self._buscar_por_email()
+            elif opcion == "4":
+                self._eliminar_visitante()
            
             elif opcion == "0":
                 break
@@ -30,7 +36,7 @@ class MenuVisitantes:
             
             input("\n➤ Presiona Enter para continuar...")
     
-    # METODO AL CREAR EL VISITANTE:
+    # ____ CREAR VISITANTE ____
     def _crear_visitante (self):
         print("MENU VISITANTES: CREAR UN VISITANTE.")
 
@@ -130,16 +136,17 @@ class MenuVisitantes:
         except Exception as e:
             print("ERROR: No se ha podido crear el visitante:", e)
 
-    # LISTAR TODOS LOS VISITANTES:
+    # ____ LISTAR TODOS LOS VISITANTES ____
     def _listar_visitantes(self):
         print("MENU VISITANTES: LISTA DE TODOS LOS VISITANTES:")
         VisitanteRepository.obtener_todos()
 
-    # BUSCAR POR EMAIL
+    # ____ BUSCAR POR EMAIL ____
     def _buscar_por_email(self):
         email = input("Introduce el email del visitante: ").strip()
         VisitanteRepository.obtener_por_id(email)
 
+    # ____ ELIMINAR VISITANTE ____
     def _eliminar_visitante(self):
         try:
             visitante_id = int(input("Introduce la ID del visitante que vas a liminar: "))
@@ -149,7 +156,7 @@ class MenuVisitantes:
 
         # Confirmación antes de eliminar
         while True:
-            confirm = input(f"¿Estás seguro de que deseas eliminar el visitante con ID {visitante_id}? (S/N): ").strip().upper()
+            confirm = input(f"Eliminar visitante con ID: {visitante_id}? (S)i / (N)o: ").strip().upper()
             if confirm == "S":
                 VisitanteRepository.eliminar(visitante_id)
                 break
