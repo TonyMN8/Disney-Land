@@ -1,15 +1,55 @@
 # IMPORTACIONES.
 # repositorios y modelos relacionados:
 from repositories.visitante_repositories import VisitanteRepository
+from repositories.atraccion_repositories import AtraccionRepository
 from models.visitante_model import VisitanteModel
+from models.atraccion_model import AtraccionModel
 import json
+from datetime import datetime
+
+# ICONOS: https://symbl.cc/es
 
 # Clase MenuVisitantes
+# Tenemos la lista de las opciones de nuestra aplicación.
+
+class MenuPrincipal:
+
+    @staticmethod
+    def menu_principal():
+        while True:
+            print("🎠 DISNEY LAND")
+            print("\n1. MENU VISITANTES.")
+            print("2. MENU ATRACCIONES.")
+            print("3. MENU TICKETS")
+            print("0. Cerrar el programa")
+                
+            opcion = input("\n➤  Selecciona una opcion: ").strip()
+            print("")
+                
+            if opcion == "1":
+                Visitantes.menu_visitantes()
+            elif opcion == "2":
+                Atracciones.menu_atracciones()
+            elif opcion == "3":
+                pass
+            elif opcion == "4":
+                pass
+            
+            elif opcion == "0":
+                break
+            else:
+                print("\nLa opcion que has introducido es invalida.")
+                
+            input("\n➤ Presiona Enter para continuar...")
+
+# Clase Visitantes
 # Agrupa toda la lógica relacionada con la gestión de visitantes:
 # mostrar menú, crear, listar, buscar y eliminar visitantes
-class MenuVisitantes:
+class Visitantes:
+
     # ____ MENU VISITANTES ____:
-    def mostrar(self):
+    @staticmethod
+    def menu_visitantes():
         while True:
             print("👥 MENU: GESTION DE VISITANTES")
             print("\n1. Crear visitante.")
@@ -22,14 +62,13 @@ class MenuVisitantes:
             print("")
             
             if opcion == "1":
-                self._crear_visitante()
+                Visitantes.crear_visitante()
             elif opcion == "2":
-                self._listar_visitantes()
+                Visitantes.listar_visitantes()
             elif opcion == "3":
-                self._buscar_por_email()
+                Visitantes.buscar_por_email()
             elif opcion == "4":
-                self._eliminar_visitante()
-           
+                Visitantes.eliminar_visitante()
             elif opcion == "0":
                 break
             else:
@@ -38,7 +77,8 @@ class MenuVisitantes:
             input("\n➤ Presiona Enter para continuar...")
     
     # ____ CREAR VISITANTE ____
-    def _crear_visitante (self):
+    @staticmethod
+    def crear_visitante():
         print("MENU VISITANTES: CREAR UN VISITANTE.")
 
         # VALIDAR NOMBRE:
@@ -133,8 +173,8 @@ class MenuVisitantes:
                 break # Salimos del bucle.
             else:
                 print("INFO: Debes responder (S)i / (N)o")
+        
         try:
-            
             # Creamos el visitante con el repositorio:
             VisitanteRepository.crear_visitante(
                 nombre=nombre,
@@ -147,7 +187,8 @@ class MenuVisitantes:
             print("ERROR: No se ha podido crear el visitante:", e)
 
     # ____ LISTAR TODOS LOS VISITANTES ____
-    def _listar_visitantes(self):
+    @staticmethod
+    def listar_visitantes():
         listar_visitantes = VisitanteRepository.obtener_todos()
         if not listar_visitantes:
             return
@@ -155,19 +196,21 @@ class MenuVisitantes:
         print("MENU VISITANTES: LISTA DE TODOS LOS VISITANTES:")
 
     # ____ BUSCAR POR EMAIL ____
-    def _buscar_por_email(self):
+    @staticmethod
+    def buscar_por_email():
         email = input("Introduce el email del visitante: ").strip()
         VisitanteRepository.obtener_por_email(email)
 
     # ____ ELIMINAR VISITANTE ____
-    def _eliminar_visitante(self):
+    @staticmethod
+    def eliminar_visitante():
         listar_visitantes = VisitanteRepository.obtener_todos()
 
         if not listar_visitantes:
             return
 
         try:
-            self._listar_visitantes()
+            listar_visitantes()
             visitante_id = int(input("Introduce la ID del visitante que vas a liminar: "))
         except ValueError:
             print("ERROR: Debes ingresar una ID valida.")
@@ -184,3 +227,210 @@ class MenuVisitantes:
                 break
             else:
                 print("INFO: Debes responder (S)i / (N)o")
+
+# Clase Atracciones
+# Agrupa toda la lógica relacionada con la gestión de las atracciones:
+# mostrar menú, crear, listar, buscar, eliminar atracciones, etc.
+class Atracciones:
+    # ____ MENU ATRACCIONES ____:
+    @staticmethod
+    def menu_atracciones():
+        while True:
+            print("🎡 MENU: GESTION DE ATRACCIONES")
+            print("\n1. Crear una nueva atraccion.")
+            print("2. Listar todas las atracciones.")
+            print("3. Buscar atraccion por nombre.")
+            print("4. Eliminar atraccion.")
+            print("0. Volver al menú principal.")
+            
+            opcion = input("\n➤  Selecciona una opcion: ").strip()
+            print("")
+            
+            if opcion == "1":
+                Atracciones.crear_atraccion()
+            elif opcion == "2":
+                pass
+                # self._listar_atracciones()
+            elif opcion == "3":
+                pass
+                # self._buscar_por_nombre()
+            elif opcion == "4":
+                pass
+                # self._eliminar_atraccion()
+           
+            elif opcion == "0":
+                break
+            else:
+                print("\nLa opcion que has introducido es invalida.")
+            
+            input("\n➤ Presiona Enter para continuar...")
+    
+    # ____ VALIDAR HORA ____
+    @staticmethod
+    def validarHora(hora):
+        try:
+            return datetime.strptime(hora, "%H:%M").time()
+        except Exception as e:
+            print("ERROR:", e)
+
+
+    # ____ CREAR ATRACCION ____
+    @staticmethod
+    def crear_atraccion():
+        print("🎡 MENU ATRACCIONES: CREAR UNA ATRACCION.")
+
+        # VALIDAR NOMBRE:
+        while True:
+            nombre = input("Nombre de la atracción: ").strip()
+
+            # Obtenemos el nombre mediante el modelo.
+            nombre_existente =  AtraccionModel.get_or_none(AtraccionModel.nombre == nombre)
+            if nombre_existente:
+                print(f"ERROR: El nombre de la atraccion: {nombre} ya existe.")
+
+            # Si la variable nombre contiene algo, salimos del bucle.
+            if nombre:
+                break
+            else:
+                print("ERROR: El nombre no puede estar vacío")
+
+        # VALIDAR TIPO:
+        while True:
+            tipo = input("Tipo de atracción (extrema, familiar, infantil, acuatica): ").strip().lower()
+            # Si el tipo es igual a tipo in, salimos del bucle.
+            if tipo in ["extrema", "familiar", "infantil", "acuatica", "acuática"]:
+                break
+            else:
+                print("ERROR: Ingresa un tipo valido (extrema, familiar, infantil, acuatica)")
+
+        # VALIDAR ALTURA (cm):
+        while True:
+            try:
+                altura = int(input("Altura minima de la atraccion: "))
+                # Si la altura es un INT y mayor a > 80.
+                if altura > 80:
+                    break
+                else:
+                    print("ERROR: La altura debe superior a 80cm")
+
+            except Exception as e:
+                print("ERROR: Introduce una altura valida.")
+
+        # VALIDAR DETALLES:
+        detalles = {}
+        
+        # VALIDAR DURACION (SEGUNDOS):      
+        while True:
+            try:
+                duracion_atraccion = int(input("Duracion de la atraccion: "))
+                if duracion_atraccion > 0:
+                    detalles["duracion_segundos"] = duracion_atraccion
+                    break
+                else:
+                    print("ERROR: La duracion debe ser mayor a 0")
+            except Exception as e:
+                print("ERROR: Introduce una duracion valida.")
+        # VALIDAR CAPACIDAD POR TURNO:        
+        while True:
+            try:
+                capacidad_turno = int(input("Capacidad de la atraccion: "))
+                if capacidad_turno > 0:
+                    detalles["capacidad_por_turno"] = capacidad_turno
+                    break
+                else:
+                    print("ERROR: La capacidad de la atraccion debe ser mayor a 0")
+            except Exception as e:
+                print("ERROR: Introduce un valor valido.")
+
+        # VALIDAR INTENSIDAD (MAYOR A 7):        
+        while True:
+            try:
+                intensidad = int(input("Intensidad de la atraccion: "))
+                if intensidad > 7:
+                    detalles["intensidad"] = capacidad_turno
+                    break
+                else:
+                    print("ERROR: La capacidad de la atraccion debe ser mayor a 7")
+            except Exception as e:
+                print("ERROR: Introduce un valor valido.")
+
+        # VALIDAR CARACTERISTICAS: "looping", "caida_libre", "giro_360
+        while True:
+            caracteristicas = input("Introduce una caracteristica: ").strip().lower()
+                
+            if caracteristicas in ["looping", "caida_libre", "giro_360"]:
+                caracteristicas_coma = caracteristicas.split(",")
+                caracteristicas_lista = []
+
+                # Añadimos las caracteristicas a la lista:
+                for recorrerCaracteristicas in caracteristicas_coma:
+                    caracteristicas_lista.append(recorrerCaracteristicas)
+                break
+            else:
+                print("ERROR: Debes introducir una caracteristica valida: looping, caida_libre, giro_360.")
+
+        # VALIDAR HORARIO:
+        horarios = {}
+
+        # Apertura.
+        while True:
+            apertura = input("Hora de apertura: ").strip()
+            hora_apertura = Atracciones.validarHora(apertura)
+            if hora_apertura:
+                horarios["apertura"] = apertura
+                break
+            else:
+                print("ERROR: La hora no es valida. Formato: HH:MM '09:30'")
+        
+        # Cierre.
+        while True:
+            cierre = input("Hora de cierre: ").strip()
+            hora_cierre = Atracciones.validarHora(cierre)
+            if hora_cierre:
+                if hora_cierre > hora_apertura:
+                    horarios["cierre"] = cierre
+                    break
+                else:
+                    print("ERROR: La hora de cierre debe ser mayor que la hora de apertura.") 
+            else:
+                print("ERROR: La hora no es valida. [Formato]: HH:MM '09:30'")
+
+       # VALIDAR HORARIOS DE MANTENIMIENTO:
+        while True:
+            mantenimiento = input("Horarios de mantenimiento (ejemplo: 14:00-15:00,16:00-17:00): ").strip()
+            if mantenimiento:
+                mantenimiento_coma = mantenimiento.split(",")
+                horarios_mantenimiento = []
+                for recorrerHorario in mantenimiento_coma:
+                    horarios_mantenimiento.append(recorrerHorario.strip())
+                break
+            else:
+                print("ERROR: Debes incluir al menos un horario de mantenimiento")
+
+            # Guardamos en el diccionario de horarios
+            horarios["mantenimiento"] = horarios_mantenimiento
+
+        # Atraccion activa si o no
+        while True:
+            atraccion_activa = input("Activar atraccion S(i)/ N(o): ").strip().upper()
+            if atraccion_activa == "S":
+                activa = True
+                break
+            elif atraccion_activa == "N":
+                activa = False
+                break
+            else:
+                print("ERROR: Introduce S(i) o N(o) para activar o no la atraccion.")
+          
+        try:
+            # Creamos el visitante con el repositorio:
+            AtraccionRepository.crear_atraccion(
+                nombre=nombre,
+                tipo=tipo,
+                altura_minima=altura,
+                detalles=detalles
+            )
+
+        except Exception as e:
+            print("ERROR: No se ha podido crear el visitante:", e)
+
