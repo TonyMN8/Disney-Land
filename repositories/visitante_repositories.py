@@ -70,6 +70,7 @@ class VisitanteRepository:
                     )
         else:
             print(f"INFO: No existe ningun visitante registrado con el correo: {visitante_correo}")
+            return
 
     # ELIMINAR UN VISITANTE POR SU ID:
     @staticmethod
