@@ -1,6 +1,7 @@
 # IMPORTACIONES.
-# repositorios relacionados:
+# repositorios y modelos relacionados:
 from repositories.visitante_repositories import VisitanteRepository
+from models.visitante_model import VisitanteModel
 import json
 
 # Clase MenuVisitantes
@@ -52,11 +53,19 @@ class MenuVisitantes:
         # VALIDAR EMAIL:
         while True:
             email = input("Email del visitante: ").strip()
+
+            # Obtenemos el email mediante el modelo.
+            email_existente =  VisitanteModel.get_or_none(VisitanteModel.email == email)
+            # Validacion email repetido:
+            if email_existente:
+                print(f"ERROR: El email: {email} ya existe.")
+            # Validacion '@' y '.':
             if "@" in email and "." in email:
                 # Si el email contiene "@" y "." rompemos el bucle.
                 break
+
             else:
-                print("ERROR: El email debe contener @ y .")
+                print("ERROR: El email debe contener '@' y '.'")
         
         # VALIDAR ALTURA (cm):
         while True:
@@ -101,7 +110,7 @@ class MenuVisitantes:
                     restricciones_lista = []
                     
                     # Añadimos las restricciones a la lista creada:
-                    for recorrerRestricciones in restricciones_lista:
+                    for recorrerRestricciones in restricciones_coma:
                         restricciones_lista.append(recorrerRestricciones)
                 # En caso de no introducir nada, creamos una lista vacia.
                 else:
@@ -109,8 +118,8 @@ class MenuVisitantes:
 
                 preferencias = {
                     "tipo_favorito": tipo_favorito,
-                    "restricciones": restricciones,
-                    "historial_visitas": "0" # Al crear el visitante siempre tendra un historial de visitas vacio.
+                    "restricciones": restricciones_lista,
+                    "historial_visitas": 0 # Al crear el visitante siempre tendra un historial de visitas vacio.
                 }
                 break # Salimos del bucle.
             
@@ -119,12 +128,18 @@ class MenuVisitantes:
                 preferencias = {
                     "tipo_favorito": "No especificado",
                     "restricciones": "Sin restriccion",
-                    "historial_visitas": "0" # Al crear el visitante siempre tendra un historial de visitas vacio.
+                    "historial_visitas": 0 # Al crear el visitante siempre tendra un historial de visitas vacio.
                 }
                 break # Salimos del bucle.
             else:
                 print("INFO: Debes responder (S)i / (N)o")
         try:
+            
+            
+
+
+
+
             # Creamos el visitante con el repositorio:
             VisitanteRepository.crear_visitante(
                 nombre=nombre,
@@ -146,12 +161,8 @@ class MenuVisitantes:
 
     # ____ BUSCAR POR EMAIL ____
     def _buscar_por_email(self):
-        listar_visitantes = VisitanteRepository.obtener_todos()
-        if not listar_visitantes:
-            return
-        
         email = input("Introduce el email del visitante: ").strip()
-        VisitanteRepository.obtener_por_id(email)
+        VisitanteRepository.obtener_por_email(email)
 
     # ____ ELIMINAR VISITANTE ____
     def _eliminar_visitante(self):

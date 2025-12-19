@@ -47,10 +47,11 @@ class VisitanteRepository:
                     )
         else:
             print("INFO: No hay ningun visitante registrado.")
+            return
    
     # OBTENER UN VISITANTE POR SU CORREO ELECTRONICO:
     @staticmethod
-    def obtener_por_id(visitante_correo):
+    def obtener_por_email(visitante_correo):
         visitantes = VisitanteModel.select().where(VisitanteModel.email == visitante_correo)
         if visitantes:
             for recorrerVisitantes in visitantes:
