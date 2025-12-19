@@ -19,8 +19,6 @@ class AtraccionRepository:
         except Exception as e:
             print(f"No se ha podido crear la atraccion:", e)
 
-
-
     # OBTENER TODAS LAS ATRACCIONES:
     def obtener_todos():
         atraccion = AtraccionModel.select()
@@ -51,7 +49,6 @@ class AtraccionRepository:
     def obtener_por_nombre(nombre):
         # Obtenemos el nombre mediante el modelo atraccion:
         atraccion = AtraccionModel.get_or_none(AtraccionModel.nombre == nombre)
-
         if atraccion:
             print(
                 f"ID: {atraccion.id}, "
@@ -70,3 +67,15 @@ class AtraccionRepository:
         else:
             print(f"INFO: No hay ninguna atraccion registrada con el nombre {atraccion.nombre}.")
             return
+        
+    # ELIMINAR UNA ATRACCION POR SU NOMBRE:
+    @staticmethod
+    def eliminar(nombre):
+        atraccion = AtraccionModel.get_or_none(AtraccionModel.nombre == nombre)
+        eliminado = False
+        for recorrerAtraccion in atraccion:
+            recorrerAtraccion.delete_instance()
+            print(f"INFO: La atraccion: {recorrerAtraccion.nombre} ha sido eliminada.")
+            eliminado = True
+        if not eliminado:
+            print(f"INFO: La atraccion con nombre: {nombre} no existe.")
