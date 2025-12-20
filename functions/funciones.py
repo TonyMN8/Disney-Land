@@ -2,8 +2,10 @@
 # repositorios y modelos relacionados:
 from repositories.visitante_repositories import VisitanteRepository
 from repositories.atraccion_repositories import AtraccionRepository
+from repositories.ticket_repositories import TicketRepository
 from models.visitante_model import VisitanteModel
 from models.atraccion_model import AtraccionModel
+from models.tickets_model import TicketModel
 import json
 from datetime import datetime
 
@@ -31,10 +33,7 @@ class MenuPrincipal:
             elif opcion == "2":
                 Atracciones.menu_atracciones()
             elif opcion == "3":
-                pass
-            elif opcion == "4":
-                pass
-            
+                Tickets.menu_tickets()
             elif opcion == "0":
                 break
             else:
@@ -474,3 +473,36 @@ class Atracciones:
                 break
             else:
                 print("INFO: Debes responder (S)i / (N)o")
+
+# Clase Tickets
+# Agrupa toda la lógica relacionada con la gestión de tickets
+class Tickets:
+
+    # ____ MENU TICKETS ____
+    @staticmethod
+    def menu_tickets():
+        while True:
+            print("🧾 MENU: GESTION DE TICKETS")
+            print("\n1. Crear ticket.")
+            print("2. Listar todos los tickets.")
+            print("3. Buscar ticket por ID.")
+            print("4. Eliminar ticket.")
+            print("0. Volver al menú principal.")
+            
+            opcion = input("\n➤ Selecciona una opcion: ").strip()
+            print("")
+            
+            if opcion == "1":
+                Tickets.crear_ticket()
+            elif opcion == "2":
+                Tickets.listar_tickets()
+            elif opcion == "3":
+                Tickets.buscar_ticket_id()
+            elif opcion == "4":
+                Tickets.eliminar_ticket()
+            elif opcion == "0":
+                break
+            else:
+                print("\nLa opcion que has introducido es invalida.")
+            
+            input("\n➤ Presiona Enter para continuar...")

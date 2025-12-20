@@ -3,7 +3,6 @@
 from models.atraccion_model import AtraccionModel
 
 class AtraccionRepository:
-    
     @staticmethod
     # METODO CREAR ATRACCION:
     def crear_atraccion(nombre, tipo, altura_minima, detalles, activa):
