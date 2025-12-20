@@ -249,15 +249,11 @@ class Atracciones:
             if opcion == "1":
                 Atracciones.crear_atraccion()
             elif opcion == "2":
-                pass
                 Atracciones.listar_atracciones()
             elif opcion == "3":
-                pass
-                
+                Atracciones.buscar_nombre_atraccion()
             elif opcion == "4":
-                pass
-                
-           
+                Atracciones.eliminar_atraccion()
             elif opcion == "0":
                 break
             else:
@@ -443,12 +439,38 @@ class Atracciones:
         except Exception as e:
             print("ERROR: No se ha podido crear el visitante:", e)
 
-    # ____ LISTAR TODOS LOS VISITANTES ____
+    # ____ LISTAR TODAS LAS ATRACCIONES ____
     @staticmethod
     def listar_atracciones():
         listar_atracciones = AtraccionRepository.obtener_todos()
         if not listar_atracciones:
             return
         
-        print("MENU VISITANTES: LISTA DE TODOS LOS VISITANTES:")
+        print("MENU ATRACCIONES: LISTA DE TODAS LAS ATRACCIONES:")
 
+    # ____ BUSCAR POR NOMBRE DE LA ATRACCION ____
+    @staticmethod
+    def buscar_nombre_atraccion():
+        nombre = input("Introduce el nombre de la atraccion: ").strip()
+        AtraccionRepository.obtener_por_nombre(nombre)
+
+    # ____ ELIMINAR ATRACCION ____
+    @staticmethod
+    def eliminar_atraccion():
+        # Accedemos al repositorio de la atraccion, en el metodo obtener_todos.
+        listar_atracciones = AtraccionRepository.obtener_todos()
+        if listar_atracciones is False:
+            return
+
+        nombre_atraccion = input("Introduce el nombre de la atraccion que quieres eliminar: ").strip()
+        # Confirmación antes de eliminar
+        while True:
+            confirm = input(f"Eliminar la atraccion con el nombre: {nombre_atraccion}? (S)i / (N)o: ").strip().upper()
+            if confirm == "S":
+                AtraccionRepository.eliminar(nombre_atraccion)
+                break
+            elif confirm == "N":
+                print(f"INFO: Cancelas la operacion, no se ha eliminado la atraccion: {nombre_atraccion}.")
+                break
+            else:
+                print("INFO: Debes responder (S)i / (N)o")

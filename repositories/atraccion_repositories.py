@@ -57,25 +57,23 @@ class AtraccionRepository:
   
         else:
             print("INFO: No hay ninguna atraccion registrada.")
-            return
-
+            return False # Retorno False en caso de que no haya atracciones.
 
     # OBTENER ATRACCION POR NOMBRE:
     def obtener_por_nombre(nombre):
         # Obtenemos el nombre mediante el modelo atraccion:
         atraccion = AtraccionModel.get_or_none(AtraccionModel.nombre == nombre)
         if atraccion:
-            for recorrerAtraccion in atraccion:
-                detalles_atraccion = recorrerAtraccion.detalles
+                detalles_atraccion = atraccion.detalles
                 horarios = detalles_atraccion.get("horarios", {})
                 caracteristicas = detalles_atraccion.get('caracteristicas', [])
 
                 # Nombre, tipo y altura:
                 print("───────────────────────────────────────────────────────────────────────────────")
-                print(  f"🎡 ATRACCIÓN ID: {recorrerAtraccion.id} | "
-                        f"Nombre: {recorrerAtraccion.nombre} | "
-                        f"Tipo: {recorrerAtraccion.tipo} | "
-                        f"Altura mínima: {recorrerAtraccion.altura_minima} cm")
+                print(  f"🎡 ATRACCIÓN ID: {atraccion.id} | "
+                        f"Nombre: {atraccion.nombre} | "
+                        f"Tipo: {atraccion.tipo} | "
+                        f"Altura mínima: {atraccion.altura_minima} cm")
                 
                 # Detalles
                 print(f"(-) Duración: {detalles_atraccion.get('duracion_segundos', 0)} seg | "
@@ -91,10 +89,10 @@ class AtraccionRepository:
                 print(f"      Mantenimiento: {', '.join(mantenimiento) if mantenimiento else 'Ninguno'}")
                 
                 # Estado y fecha
-                print(f"(-) Estado: {'Activa' if recorrerAtraccion.activa else 'Inactiva'}")
-                print(f"(-) Fecha de inauguración: {recorrerAtraccion.fecha_inauguracion}")
+                print(f"(-) Estado: {'Activa' if atraccion.activa else 'Inactiva'}")
+                print(f"(-) Fecha de inauguración: {atraccion.fecha_inauguracion}")
                 print("───────────────────────────────────────────────────────────────\n")
-  
+
         else:
             print("INFO: No hay ninguna atraccion registrada.")
             return
@@ -103,10 +101,8 @@ class AtraccionRepository:
     @staticmethod
     def eliminar(nombre):
         atraccion = AtraccionModel.get_or_none(AtraccionModel.nombre == nombre)
-        eliminado = False
-        for recorrerAtraccion in atraccion:
-            recorrerAtraccion.delete_instance()
-            print(f"INFO: La atraccion: {recorrerAtraccion.nombre} ha sido eliminada.")
-            eliminado = True
-        if not eliminado:
+        if atraccion:
+            atraccion.delete_instance()
+            print(f"INFO: La atraccion: {atraccion.nombre} ha sido eliminada.")
+        else:
             print(f"INFO: La atraccion con nombre: {nombre} no existe.")
