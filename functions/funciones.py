@@ -599,7 +599,6 @@ class Tickets:
             else:
                 print("ERROR: Debes responder Si o No.")
 
-
         # Servicios extra fast_pass", "comida_incluida
         while True:
             agregar_servicio = input("Agregar servicios extra (S)i / (N)o: ").strip().upper()
@@ -627,7 +626,6 @@ class Tickets:
             else:
                 print("ERROR: Debes responder Si o No.")
 
-        # Método de pago
         # VALIDAR METODO DE PAGO
         while True:
             metodo_pago = input("Metodo de pago (Tarjeta o Efectivo): ").strip().lower()
@@ -637,7 +635,7 @@ class Tickets:
             else:
                 print("ERROR: Debes introducir 'Tarjeta' o 'Efectivo'")
 
-        # Crear el ticket usando el repositorio
+        # Creamos el repositorio despues de pasar todas las validaciones:
         TicketRepository.crear_ticket(
             visitante=visitante,
             atraccion=atraccion,
