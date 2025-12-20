@@ -506,3 +506,142 @@ class Tickets:
                 print("\nLa opcion que has introducido es invalida.")
             
             input("\n➤ Presiona Enter para continuar...")
+
+ # ____ CREAR TICKET ____ 
+    @staticmethod
+    def crear_ticket():
+        print("🧾 MENU TICKETS: CREAR UN TICKET.")
+
+        # SELECCIONAR AL VISITANTE
+        listar_visitantes = VisitanteRepository.obtener_todos()
+        if listar_visitantes is False:
+            return
+
+        try:
+            visitante_id = int(input("Introduce el ID del visitante: "))
+        except ValueError:
+            print("ERROR: Ingresa un ID valido.")
+            return
+
+        visitante = VisitanteModel.get_or_none(VisitanteModel.id == visitante_id)
+        if not visitante:
+            print("ERROR: No se ha encontrado el visitante.")
+            return
+
+        # SELECCIONAR LA ATRACCION:
+        listar_atracciones = AtraccionRepository.obtener_todos()
+        if not listar_atracciones:
+            print("ERROR: No hay atracciones registradas.")
+            return
+
+        while True:
+            try:
+                atraccion_id = int(input("Introduce la ID de la atraccion: "))
+                atraccion = AtraccionModel.get_or_none(AtraccionModel.id == atraccion_id)
+                if atraccion:
+                    break
+                else:
+                    print("ERROR: La atraccion no existe.")
+
+            except Exception as e:
+                print("ERROR: Ingresa un ID valido.")
+
+        # Tipo de ticket
+        while True:
+            tipo_ticket = input("Tipo de ticket (general, colegio, empleado): ").strip().lower()
+            if tipo_ticket in ["general", "colegio", "empleado"]:
+                break
+            else:
+                print("ERROR: Debes introducir un tipo de ticket valido: General, colegio o empleado.")
+
+        # Fecha visita
+        while True:
+            fecha_visita_input = input("Fecha de visita (YYYY-MM-DD): ").strip()
+            try:
+                fecha_visita = datetime.strptime(fecha_visita_input, "%Y-%m-%d").date()
+                break
+            except:
+                print("ERROR: La fecha no es valida. Formato: YYYY-MM-DD '2012-12-05'")
+
+        # Detalles de compra
+        detalles_compra = {}
+        while True:
+            try:
+                detalles_compra["precio"] = float(input("Precio: "))
+                break
+            except ValueError:
+                print("ERROR: Ingresa un precio valido. Formato: 15.30")
+
+        # Descuentos aplicados.
+        while True:
+            agregar_descuentos = input("Aplicar descuentos (S)i / (N)o: ").strip().upper()
+            if agregar_descuentos == "SI":
+                descuentos = input("Introduce los descuentos (Estudiante o Early Bird) separados por coma: ").strip().lower()
+                lista_descuentos = []
+                descuentos_validos = ["estudiante", "early bird"]
+
+                # Recorremos cada descuento ingresado
+                for recorrerDescuento in descuentos.split(","):
+                    recorrerDescuento = recorrerDescuento.strip()
+                    if recorrerDescuento not in descuentos_validos:
+                        print(f"ERROR: Introduce un descuento válido.")
+                        break
+                    else:
+                        lista_descuentos.append(recorrerDescuento)
+                # Si los descuentos son validos:
+                else:
+                    detalles_compra["descuentos_aplicados"] = lista_descuentos
+                    break  # Salimos del while
+
+            elif agregar_descuentos == "NO":
+                detalles_compra["descuentos_aplicados"] = []
+                break
+            else:
+                print("ERROR: Debes responder Si o No.")
+
+
+        # Servicios extra fast_pass", "comida_incluida
+        while True:
+            agregar_servicio = input("Agregar servicios extra (S)i / (N)o: ").strip().upper()
+            if agregar_servicio == "SI":
+                servicios = input("Introduce los servicios extra (Fast Pass o Comida Incluida): ").strip().lower()
+                lista_servicios = []
+                servicios_validos = ["fast pass", "comida incluida"]
+
+                # Recorremos cada servicio ingresado
+                for recorrerServicio in servicios.split(","):
+                    recorrerServicio = recorrerServicio.strip()
+                    if recorrerServicio not in servicios_validos:
+                        print(f"ERROR: Introduce un servicio valido.")
+                        break 
+                    else:
+                        lista_servicios.append(recorrerServicio)
+                # Si los servicios son validos:
+                else:
+                    detalles_compra["servicios_extra"] = lista_servicios
+                    break
+
+            elif agregar_servicio == "NO":
+                detalles_compra["servicios_extra"] = []
+                break
+            else:
+                print("ERROR: Debes responder Si o No.")
+
+        # Método de pago
+        # VALIDAR METODO DE PAGO
+        while True:
+            metodo_pago = input("Metodo de pago (Tarjeta o Efectivo): ").strip().lower()
+            if metodo_pago in ["tarjeta", "efectivo"]:
+                detalles_compra["metodo_pago"] = metodo_pago
+                break
+            else:
+                print("ERROR: Debes introducir 'Tarjeta' o 'Efectivo'")
+
+        # Crear el ticket usando el repositorio
+        TicketRepository.crear_ticket(
+            visitante=visitante,
+            atraccion=atraccion,
+            fecha_visita=fecha_visita,
+            tipo_ticket=tipo_ticket,
+            detalles_compra=detalles_compra
+        )
