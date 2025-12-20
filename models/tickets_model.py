@@ -15,7 +15,7 @@ class TicketModel(BaseModel):
     id = AutoField()
     visitante = ForeignKeyField(VisitanteModel, backref='tickets', on_delete='CASCADE')
     atraccion = ForeignKeyField(AtraccionModel, backref='tickets', null=True, on_delete='SET NULL')
-    fecha_compra = DateTimeField(default=datetime.now)
+    fecha_compra = DateTimeField(default=lambda: datetime.now().replace(microsecond=0)) # Truncamos los segundos, función encontrada en internet.
     fecha_visita = DateField()
     tipo_ticket = CharField(constraints=[Check("tipo_ticket IN ('general', 'colegio', 'empleado')")])
     detalles_compra = BinaryJSONField(null=True, default=lambda: {
