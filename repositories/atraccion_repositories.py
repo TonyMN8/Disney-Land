@@ -6,14 +6,15 @@ class AtraccionRepository:
     
     @staticmethod
     # METODO CREAR ATRACCION:
-    def crear_atraccion(nombre, tipo, altura_minima, detalles):
+    def crear_atraccion(nombre, tipo, altura_minima, detalles, activa):
         # Excepción por si falla a la hora de crear el visitante:
         try:
             atraccion = AtraccionModel.create(
                 nombre=nombre,
                 tipo=tipo,
                 altura_minima=altura_minima,
-                detalles=detalles
+                detalles=detalles,
+                activa=activa
             )
             print(f"Se ha creado la atraccion ({atraccion.nombre}) de tipo: {atraccion.tipo}")
         except Exception as e:
@@ -28,19 +29,27 @@ class AtraccionRepository:
                     detalles_atraccion = recorrerAtraccion.detalles
 
                 # Mostramos la atraccion:
+                # Línea principal: ID, Nombre, Tipo, Altura
                 print(
-                    f"ID: {recorrerAtraccion.id}, "
-                    f"Nombre: {recorrerAtraccion.nombre}, "
-                    f"Tipo: {recorrerAtraccion.tipo}, "
-                    f"Altura minima: {recorrerAtraccion.altura_minima} cm, "
-                    f"Duracion: {detalles_atraccion.get("duracion_segundos")}, "
-                    f"Capacidad por Turno: {detalles_atraccion.get("capacidad_por_turno")}, "
-                    f"Intensidad: {detalles_atraccion.get("intensidad")}, "
-                    f"Caracteristicas: {detalles_atraccion.get("caracteristicas")}, "
-                    f"Horarios: {detalles_atraccion.get("horarios")}, "
-                    f"Activa: {recorrerAtraccion.activa}, "
-                    f"Fecha de inaguracion: {recorrerAtraccion.fecha_inauguracion}"
+                    f"_____________________________________________________________________________________________"
+                    f"🎡 ID: {recorrerAtraccion.id} | "
+                    f"Nombre: {recorrerAtraccion.nombre} | "
+                    f"Tipo: {recorrerAtraccion.tipo} | "
+                    f"Altura mínima: {recorrerAtraccion.altura_minima} cm"
                 )
+                # Línea de detalles: Duración, Capacidad, Intensidad, Características, Horarios, Activa, Fecha
+                print(f"Duración: {detalles_atraccion.get('duracion_segundos', 'N/A')} seg | "
+                    f"Capacidad: {detalles_atraccion.get('capacidad_por_turno', 'N/A')} por turno | "
+                    f"Intensidad: {detalles_atraccion.get('intensidad', 'N/A')} | "
+                    f"Características: {detalles_atraccion.get('caracteristicas', 'N/A')} | "
+                    f"Horarios: {detalles_atraccion.get('horarios', {})}"
+                )
+
+                 # Línea de detalles: Duración, Capacidad, Intensidad, Características, Horarios, Activa, Fecha
+                print(f"Activa: {recorrerAtraccion.activa} | "
+                    f"Fecha de inauguración: {recorrerAtraccion.fecha_inauguracion}"
+                )
+      
         else:
             print("INFO: No hay ninguna atraccion registrada.")
             return
