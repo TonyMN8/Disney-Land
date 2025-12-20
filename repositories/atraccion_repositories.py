@@ -21,39 +21,45 @@ class AtraccionRepository:
             print(f"No se ha podido crear la atraccion:", e)
 
     # OBTENER TODAS LAS ATRACCIONES:
+    @staticmethod
     def obtener_todos():
         atraccion = AtraccionModel.select()
         if atraccion:
             for recorrerAtraccion in atraccion:
-                if recorrerAtraccion.detalles:
-                    detalles_atraccion = recorrerAtraccion.detalles
+                detalles_atraccion = recorrerAtraccion.detalles
+                horarios = detalles_atraccion.get("horarios", {})
+                caracteristicas = detalles_atraccion.get('caracteristicas', [])
 
-                # Mostramos la atraccion:
-                # Línea principal: ID, Nombre, Tipo, Altura
-                print(
-                    f"_____________________________________________________________________________________________"
-                    f"🎡 ID: {recorrerAtraccion.id} | "
-                    f"Nombre: {recorrerAtraccion.nombre} | "
-                    f"Tipo: {recorrerAtraccion.tipo} | "
-                    f"Altura mínima: {recorrerAtraccion.altura_minima} cm"
-                )
-                # Línea de detalles: Duración, Capacidad, Intensidad, Características, Horarios, Activa, Fecha
-                print(f"Duración: {detalles_atraccion.get('duracion_segundos', 'N/A')} seg | "
-                    f"Capacidad: {detalles_atraccion.get('capacidad_por_turno', 'N/A')} por turno | "
-                    f"Intensidad: {detalles_atraccion.get('intensidad', 'N/A')} | "
-                    f"Características: {detalles_atraccion.get('caracteristicas', 'N/A')} | "
-                    f"Horarios: {detalles_atraccion.get('horarios', {})}"
-                )
-
-                 # Línea de detalles: Duración, Capacidad, Intensidad, Características, Horarios, Activa, Fecha
-                print(f"Activa: {recorrerAtraccion.activa} | "
-                    f"Fecha de inauguración: {recorrerAtraccion.fecha_inauguracion}"
-                )
-      
+                # Nombre, tipo y altura:
+                print("───────────────────────────────────────────────────────────────────────────────")
+                print(  f"🎡 ATRACCIÓN ID: {recorrerAtraccion.id} | "
+                        f"Nombre: {recorrerAtraccion.nombre} | "
+                        f"Tipo: {recorrerAtraccion.tipo} | "
+                        f"Altura mínima: {recorrerAtraccion.altura_minima} cm")
+                
+                # Detalles
+                print(f"(-) Duración: {detalles_atraccion.get('duracion_segundos', 0)} seg | "
+                      f"Capacidad por turno: {detalles_atraccion.get('capacidad_por_turno', 0)} | "
+                      f"Intensidad: {detalles_atraccion.get('intensidad', 0)} | "
+                      f"Caracteristicas: {', '.join(caracteristicas) if caracteristicas else 'Ninguna'}"
+                    )
+                # Horarios
+                print("  - Horarios:")
+                print(f"      Apertura: {horarios.get('apertura', 'N/A')}")
+                print(f"      Cierre: {horarios.get('cierre', 'N/A')}")
+                mantenimiento = horarios.get('mantenimiento', [])
+                print(f"      Mantenimiento: {', '.join(mantenimiento) if mantenimiento else 'Ninguno'}")
+                
+                # Estado y fecha
+                print(f"(-) Estado: {'Activa' if recorrerAtraccion.activa else 'Inactiva'}")
+                print(f"(-) Fecha de inauguración: {recorrerAtraccion.fecha_inauguracion}")
+                print("───────────────────────────────────────────────────────────────\n")
+  
         else:
             print("INFO: No hay ninguna atraccion registrada.")
             return
-        
+
+
     # OBTENER ATRACCION POR NOMBRE:
     def obtener_por_nombre(nombre):
         # Obtenemos el nombre mediante el modelo atraccion:

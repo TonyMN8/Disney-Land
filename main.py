@@ -1,6 +1,6 @@
 from configuracion_db import inicializar_db
 from database import conectar_db, cerrar_db
-from menu.funciones import MenuPrincipal
+from functions.funciones import MenuPrincipal
 
 def main():
     inicializar_db() 
