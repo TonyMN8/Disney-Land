@@ -65,22 +65,38 @@ class AtraccionRepository:
         # Obtenemos el nombre mediante el modelo atraccion:
         atraccion = AtraccionModel.get_or_none(AtraccionModel.nombre == nombre)
         if atraccion:
-            print(
-                f"ID: {atraccion.id}, "
-                f"Nombre: {atraccion.nombre}, "
-                f"Tipo: {atraccion.tipo}, "
-                f"Altura minima: {atraccion.altura_minima} cm, "
-                f"Duracion: {atraccion.detalles.get("duracion_segundos")}, "
-                f"Capacidad por Turno: {atraccion.detalles.get("capacidad_por_turno")}, "
-                f"Intensidad: {atraccion.detalles.get("intensidad")}, "
-                f"Caracteristicas: {atraccion.detalles.get("caracteristicas")}, "
-                f"Horarios: {atraccion.detalles.get("horarios")}, "
-                f"Activa: {atraccion.activa}, "
-                f"Fecha de inaguracion: {atraccion.fecha_inauguracion}"
-            )
+            for recorrerAtraccion in atraccion:
+                detalles_atraccion = recorrerAtraccion.detalles
+                horarios = detalles_atraccion.get("horarios", {})
+                caracteristicas = detalles_atraccion.get('caracteristicas', [])
 
+                # Nombre, tipo y altura:
+                print("───────────────────────────────────────────────────────────────────────────────")
+                print(  f"🎡 ATRACCIÓN ID: {recorrerAtraccion.id} | "
+                        f"Nombre: {recorrerAtraccion.nombre} | "
+                        f"Tipo: {recorrerAtraccion.tipo} | "
+                        f"Altura mínima: {recorrerAtraccion.altura_minima} cm")
+                
+                # Detalles
+                print(f"(-) Duración: {detalles_atraccion.get('duracion_segundos', 0)} seg | "
+                      f"Capacidad por turno: {detalles_atraccion.get('capacidad_por_turno', 0)} | "
+                      f"Intensidad: {detalles_atraccion.get('intensidad', 0)} | "
+                      f"Caracteristicas: {', '.join(caracteristicas) if caracteristicas else 'Ninguna'}"
+                    )
+                # Horarios
+                print("  - Horarios:")
+                print(f"      Apertura: {horarios.get('apertura', 'N/A')}")
+                print(f"      Cierre: {horarios.get('cierre', 'N/A')}")
+                mantenimiento = horarios.get('mantenimiento', [])
+                print(f"      Mantenimiento: {', '.join(mantenimiento) if mantenimiento else 'Ninguno'}")
+                
+                # Estado y fecha
+                print(f"(-) Estado: {'Activa' if recorrerAtraccion.activa else 'Inactiva'}")
+                print(f"(-) Fecha de inauguración: {recorrerAtraccion.fecha_inauguracion}")
+                print("───────────────────────────────────────────────────────────────\n")
+  
         else:
-            print(f"INFO: No hay ninguna atraccion registrada con el nombre {atraccion.nombre}.")
+            print("INFO: No hay ninguna atraccion registrada.")
             return
         
     # ELIMINAR UNA ATRACCION POR SU NOMBRE:
