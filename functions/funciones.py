@@ -645,3 +645,12 @@ class Tickets:
             tipo_ticket=tipo_ticket,
             detalles_compra=detalles_compra
         )
+
+    # ____ LISTAR TODOS LOS TICKETS ____
+    @staticmethod
+    def listar_tickets():
+        listar_tickets = TicketRepository.obtener_todos()
+        if not listar_tickets:
+            return
+
+        print("🧾 MENU TICKETS: LISTA DE TODOS LOS TICKETS:")
