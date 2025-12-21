@@ -62,3 +62,45 @@ class Consultas:
         if not atraccion_existente:
             print("INFO: No hay atracciones con duracion mayor a 120 seg")
 
+    # ATRACCIONES CON LOOPING Y CAIDA LIBRE
+    @staticmethod
+    def atracciones_caracteristicas():
+        print("🧾 CONSULTA: Atracciones con 'looping' y 'caida_libre'")
+        atracciones = AtraccionModel.select()
+        atraccion_existente = False
+        for recorrerAtracciones in atracciones:
+            caracteristicas = recorrerAtracciones.detalles.get("caracteristicas", [])
+            if "looping" in caracteristicas and "caida_libre" in caracteristicas:
+                print(f"ID: {recorrerAtracciones.id} | Nombre: {recorrerAtracciones.nombre} | Caracteristicas: {', '.join(caracteristicas)}")
+                atraccion_existente = True
+        if not atraccion_existente:
+            print("INFO: No hay atracciones con looping y caida libre")
+
+    # TICKETS CON DESCUENTO "ESTUDIANTE"
+    @staticmethod
+    def tickets_descuento():
+        print("🧾 CONSULTA: Tickets con descuento 'estudiante'")
+        tickets = TicketModel.select()
+        ticket_existente = False
+        for recorrerTickets in tickets:
+            descuentos = recorrerTickets.detalles_compra.get("descuentos_aplicados", [])
+            if "estudiante" in descuentos:
+                print(f"ID: {recorrerTickets.id} | Visitante: {recorrerTickets.visitante.nombre} | Precio: {recorrerTickets.detalles_compra.get('precio')}")
+                ticket_existente = True
+        if not ticket_existente:
+            print("INFO: No hay tickets con descuento estudiante")
+
+    # ATRACCIONES CON AL MENOS UN HORARIO DE MANTENIMIENTO
+    @staticmethod
+    def atracciones_mantenimiento():
+        print("🧾 CONSULTA: Atracciones con al menos un horario de mantenimiento")
+        atracciones = AtraccionModel.select()
+        atraccion_existente = False
+        for recorrerAtracciones in atracciones:
+            mantenimiento = recorrerAtracciones.detalles.get("horarios", {}).get("mantenimiento", [])
+            if len(mantenimiento) > 0:
+                print(f"ID: {recorrerAtracciones.id} | Nombre: {recorrerAtracciones.nombre} | Mantenimiento: {', '.join(mantenimiento)}")
+                atraccion_existente = True
+        if not atraccion_existente:
+            print("INFO: No hay atracciones con mantenimiento programado")
+

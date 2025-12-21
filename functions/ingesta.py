@@ -10,12 +10,12 @@ from models.atraccion_model import AtraccionModel
 
 def ingesta_masiva():
     # -----------------------------
-    # 1️⃣ Generar 200 visitantes
+    # 1️⃣ Generar 100 visitantes
     # -----------------------------
     tipos_favoritos = ["extrema", "familiar", "infantil", "acuatica"]
     restricciones_posibles = ["problemas_cardiacos", "embarazo", "miedo_altura", "ninguna"]
 
-    for i in range(1, 201):
+    for i in range(1, 10):
         nombre = f"Visitante_{i}"
         email = f"visitante{i}@parque.com"
         altura = random.randint(90, 200)  # altura entre 90 y 200 cm
@@ -70,8 +70,8 @@ def ingesta_masiva():
     servicios_posibles = ["fast_pass", "comida_incluida", "foto_recuerdo"]
 
     for visitante in visitantes:
-        # Cada visitante puede tener entre 1 y 10 tickets
-        for _ in range(random.randint(0, 4)):
+        # Cada visitante puede tener entre 0 y 2 tickets
+        for _ in range(random.randint(0, 3)):
             atraccion = random.choice(atracciones + [None])  # Algunos tickets generales
             fecha_visita = date.today() + timedelta(days=random.randint(0, 90))
             tipo_ticket = random.choice(tipos_ticket)
@@ -90,4 +90,4 @@ def ingesta_masiva():
                 usado=random.choice([True, False])
             )
 
-    print("✅ Ingesta masiva completada: 200 visitantes, 20 atracciones y tickets asociados.")
+    print("✅ Ingesta masiva completada.")

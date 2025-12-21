@@ -57,10 +57,9 @@ class MenuConsultas:
             print("2. Atracciones con intensidad mayor a 7.")
             print("3. Tickets tipo colegio con precio menor a 30.")
             print("4. Atracciones con duracion mayor a 120 segundos.")
-            print("5. Visitantes con problemas cardiacos.")
-            print("6. Atracciones con (looping) y (caida libre).")
-            print("7. Tickets con descuento (estudiante).")
-            print("8. Atracciones con al menos un horario de mantenimiento.")
+            print("5. Atracciones con (looping) y (caida libre).")
+            print("6. Tickets con descuento (estudiante).")
+            print("7. Atracciones con al menos un horario de mantenimiento.")
             print("0. Volver al menu principal.")
             
             opcion = input("\n➤ Selecciona una opcion: ").strip()
@@ -71,17 +70,15 @@ class MenuConsultas:
             elif opcion == "2":
                 Consultas.atracciones_intensidad()
             elif opcion == "3":
-                pass
+                Consultas.tickets_colegio()
             elif opcion == "4":
-                pass
+                Consultas.atracciones_duracion()
             elif opcion == "5":
-                pass
+                Consultas.atracciones_caracteristicas()
             elif opcion == "6":
-                pass
+                Consultas.tickets_descuento()
             elif opcion == "7":
-                pass
-            elif opcion == "8":
-                pass
+                Consultas.atracciones_mantenimiento()
             elif opcion == "0":
                 break
             else:
@@ -235,12 +232,11 @@ class Visitantes:
     # ____ LISTAR TODOS LOS VISITANTES ____
     @staticmethod
     def listar_visitantes():
+        print("MENU VISITANTES: LISTA DE TODOS LOS VISITANTES:")
         listar_visitantes = VisitanteRepository.obtener_todos()
         if not listar_visitantes:
             return
-        
-        print("MENU VISITANTES: LISTA DE TODOS LOS VISITANTES:")
-
+    
     # ____ BUSCAR POR EMAIL ____
     @staticmethod
     def buscar_por_email():
