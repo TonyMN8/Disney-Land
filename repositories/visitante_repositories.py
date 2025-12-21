@@ -26,54 +26,58 @@ class VisitanteRepository:
             print(f"INFO: Se ha creado el visitante: ({visitante.nombre}) con correo: {visitante.email}")
         except Exception as e:
             print(f"ERROR: No se ha podido crear el visitante: {e}")
-
+    
     # OBTENER TODOS LOS VISITANTES:
     @staticmethod
     def obtener_todos():
         visitantes = VisitanteModel.select()
-        if visitantes:
-            for recorrerVisitantes in visitantes:
-                if recorrerVisitantes.preferencias:
-                    preferencia = recorrerVisitantes.preferencias
-                # Mostramos el visitante:
-                print(
-                    f"ID: {recorrerVisitantes.id}, "
-                    f"Nombre: {recorrerVisitantes.nombre}, " 
-                    f"Email: {recorrerVisitantes.email}, "
-                    f"Altura: {recorrerVisitantes.altura} cm, "
-                    f"Fecha de registro: {recorrerVisitantes.fecha_registro}, "
-                    f"Tipo favorito: {preferencia.get('tipo_favorito')}, "
-                    f"Restricciones: {preferencia.get('restricciones')}, "
-                    f"Historial visitas: {preferencia.get('historial_visitas')}"
-                    )
-                
-            return visitantes
-        else:
-            print("INFO: No hay ningun visitante registrado.")
-            return 
-   
-    # OBTENER UN VISITANTE POR SU CORREO ELECTRONICO:
+        if not visitantes:
+            print("INFO: No hay visitantes registrados.")
+            return
+        
+        for recorrerVisitantes in visitantes:
+            pref = recorrerVisitantes.preferencias or {"tipo_favorito": "", "restricciones": [], "historial_visitas": []}
+            print(f"ID: {recorrerVisitantes.id} | Nombre: {recorrerVisitantes.nombre} | Email: {recorrerVisitantes.email}")
+            print(f"Altura: {recorrerVisitantes.altura} cm")
+            print(f"Fecha registro: {recorrerVisitantes.fecha_registro} | Tipo favorito: {pref.get('tipo_favorito', '')}")
+            print(f"Restricciones: {', '.join(pref.get('restricciones', [])) or 'Ninguna'}")
+            
+            historial = pref.get("historial_visitas", [])
+            if historial:
+                print("Historial visitas:")
+                for recorrerHistorial in historial:
+                    print(f"  {recorrerHistorial['fecha']} - {recorrerHistorial['atracciones_visitadas']} atracciones")
+            else:
+                print("Historial visitas: Ninguno")
+            print("------------------------------")
+        
+        return visitantes
+
+    # OBTENER UN VISITANTE POR SU CORREO ELECTRÓNICO
     @staticmethod
     def obtener_por_email(visitante_correo):
         visitantes = VisitanteModel.select().where(VisitanteModel.email == visitante_correo)
-        if visitantes:
-            for recorrerVisitantes in visitantes:
-                if recorrerVisitantes.preferencias:
-                    preferencia = recorrerVisitantes.preferencias
-                # Mostramos el visitante:
-                print(
-                    f"ID: {recorrerVisitantes.id}, "
-                    f"Nombre: {recorrerVisitantes.nombre}, " 
-                    f"Email: {recorrerVisitantes.email}, "
-                    f"Altura: {recorrerVisitantes.altura} cm, "
-                    f"Fecha de registro: {recorrerVisitantes.fecha_registro}, "
-                    f"Tipo favorito: {preferencia.get('tipo_favorito')}, "
-                    f"Restricciones: {preferencia.get('restricciones')}, "
-                    f"Historial visitas: {preferencia.get('historial_visitas')}"
-                    )
-        else:
-            print(f"INFO: No existe ningun visitante registrado con el correo: {visitante_correo}")
-            return
+        if not visitantes:
+            print(f"ERROR: No existe ningun visitante registrado con ese correo: {visitante_correo}")
+            return None
+
+        for recorrerVisitantes in visitantes:
+            pref = recorrerVisitantes.preferencias or {"tipo_favorito": "", "restricciones": [], "historial_visitas": []}
+            print(f"ID: {recorrerVisitantes.id} | Nombre: {recorrerVisitantes.nombre} | Email: {recorrerVisitantes.email}")
+            print(f"Altura: {recorrerVisitantes.altura} cm")
+            print(f"Fecha registro: {recorrerVisitantes.fecha_registro} | Tipo favorito: {pref.get('tipo_favorito', '')}")
+            print(f"Restricciones: {', '.join(pref.get('restricciones', [])) or 'Ninguna'}")
+
+            historial = pref.get("historial_visitas", [])
+            if historial:
+                print("Historial visitas:")
+                for h in historial:
+                    print(f"  {h['fecha']} - {h['atracciones_visitadas']} atracciones")
+            else:
+                print("Historial visitas: Ninguno")
+            print("------------------------------")
+
+        return visitantes
 
     # ELIMINAR UN VISITANTE POR SU ID:
     @staticmethod
