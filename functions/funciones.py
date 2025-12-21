@@ -5,7 +5,10 @@ from repositories.atraccion_repositories import AtraccionRepository
 from repositories.ticket_repositories import TicketRepository
 from models.visitante_model import VisitanteModel
 from models.atraccion_model import AtraccionModel
-from models.tickets_model import TicketModel
+
+# Clase consultas:
+from functions.consultas import Consultas
+
 import json
 from datetime import datetime
 
@@ -36,6 +39,8 @@ class MenuPrincipal:
                 Atracciones.menu_atracciones()
             elif opcion == "3":
                 Tickets.menu_tickets()
+            elif opcion == "4":
+                MenuConsultas.menu_consultas()
             elif opcion == "0":
                 break
             else:
@@ -43,6 +48,7 @@ class MenuPrincipal:
                 
             input("\n➤ Presiona Enter para continuar...")
 
+class MenuConsultas:
     @staticmethod
     def menu_consultas():
         while True:
@@ -61,9 +67,9 @@ class MenuPrincipal:
             print("")
             
             if opcion == "1":
-                pass
+                Consultas.preferencia_extrema()
             elif opcion == "2":
-                pass
+                Consultas.atracciones_intensidad()
             elif opcion == "3":
                 pass
             elif opcion == "4":
