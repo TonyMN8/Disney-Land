@@ -19,12 +19,14 @@ class MenuPrincipal:
     @staticmethod
     def menu_principal():
         while True:
+            print("───────────────────────────────────────────────────────────────────────────────")
             print("🎠 DISNEY LAND")
-            print("\n1. MENU VISITANTES.")
+            print("1. MENU VISITANTES.")
             print("2. MENU ATRACCIONES.")
-            print("3. MENU TICKETS")
+            print("3. MENU TICKETS.")
+            print("4. MENU CONSULTAS.")
             print("0. Cerrar el programa")
-                
+            print("───────────────────────────────────────────────────────────────────────────────")  
             opcion = input("\n➤  Selecciona una opcion: ").strip()
             print("")
                 
@@ -39,6 +41,45 @@ class MenuPrincipal:
             else:
                 print("\nLa opcion que has introducido es invalida.")
                 
+            input("\n➤ Presiona Enter para continuar...")
+
+    @staticmethod
+    def menu_consultas():
+        while True:
+            print("🔍 MENU: CONSULTAS")
+            print("\n1. Visitantes con preferencia por atracciones extremas.")
+            print("2. Atracciones con intensidad mayor a 7.")
+            print("3. Tickets tipo colegio con precio menor a 30.")
+            print("4. Atracciones con duracion mayor a 120 segundos.")
+            print("5. Visitantes con problemas cardiacos.")
+            print("6. Atracciones con (looping) y (caida libre).")
+            print("7. Tickets con descuento (estudiante).")
+            print("8. Atracciones con al menos un horario de mantenimiento.")
+            print("0. Volver al menu principal.")
+            
+            opcion = input("\n➤ Selecciona una opcion: ").strip()
+            print("")
+            
+            if opcion == "1":
+                pass
+            elif opcion == "2":
+                pass
+            elif opcion == "3":
+                pass
+            elif opcion == "4":
+                pass
+            elif opcion == "5":
+                pass
+            elif opcion == "6":
+                pass
+            elif opcion == "7":
+                pass
+            elif opcion == "8":
+                pass
+            elif opcion == "0":
+                break
+            else:
+                print("\nLa opcion que has introducido es invalida.")
             input("\n➤ Presiona Enter para continuar...")
 
 # Clase Visitantes

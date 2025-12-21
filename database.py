@@ -13,9 +13,9 @@ db = PostgresqlExtDatabase(
 def conectar_db():
     try:
         db.connect()
-        print("Conexion con la base de datos")
+        print("BASE DE DATOS: Conexion con la base de datos")
     except Exception as e:
-        print(f"Error al conectar: {e}")
+        print(f"DATABASE: ERROR al conectar: {e}")
 
 def cerrar_db():
     try:
@@ -23,4 +23,4 @@ def cerrar_db():
             db.close()
             print("BASE DE DATOS: Conexión cerrada")
     except Exception as e:
-        print(f"ERROR: No se ha podido cerrar la conexion de la base de datos.")
+        print(f"ERROR: No se ha podido cerrar la conexion de la base de datos:", e)
