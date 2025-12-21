@@ -34,4 +34,31 @@ class Consultas:
         if not atraccion_existente:
             print("INFO: No hay atracciones con intensidad mayor a 7")
 
- 
+    # TICKETS DE COLEGIO CON PRECIO MENOR A 30
+    @staticmethod
+    def tickets_colegio():
+        print("🧾 CONSULTA: Tickets tipo colegio con precio menor a 30")
+        tickets = TicketModel.select()
+        ticket_existente = False
+        for recorrerTickets in tickets:
+            precio = recorrerTickets.detalles_compra.get("precio", 0)
+            if recorrerTickets.tipo_ticket == "colegio" and precio < 30:
+                print(f"ID: {recorrerTickets.id} | Visitante: {recorrerTickets.visitante.nombre} | Precio: {precio}")
+                ticket_existente = True
+        if not ticket_existente:
+            print("INFO: No hay tickets tipo colegio con precio menor a 30")
+
+    # ATRACCIONES CON DURACION MAYOR A 120 SEGUNDOS
+    @staticmethod
+    def atracciones_duracion():
+        print("🧾 CONSULTA: Atracciones con duracion mayor a 120 segundos")
+        atracciones = AtraccionModel.select()
+        atraccion_existente = False
+        for recorrerAtracciones in atracciones:
+            duracion = recorrerAtracciones.detalles.get("duracion_segundos", 0)
+            if duracion > 120:
+                print(f"ID: {recorrerAtracciones.id} | Nombre: {recorrerAtracciones.nombre} | Duracion: {duracion} seg")
+                atraccion_existente = True
+        if not atraccion_existente:
+            print("INFO: No hay atracciones con duracion mayor a 120 seg")
+
