@@ -105,3 +105,22 @@ class AtraccionRepository:
             print(f"INFO: La atraccion: {atraccion.nombre} ha sido eliminada.")
         else:
             print(f"INFO: La atraccion con nombre: {nombre} no existe.")
+
+    # CAMBIAR EL ESTADO DE LA ATRACCION
+    @staticmethod
+    def cambiar_estado(nombre):
+        # Buscamos la atracción por nombre en la base de datos
+        atraccion = AtraccionModel.get_or_none(AtraccionModel.nombre == nombre)
+        
+        if atraccion:
+            atraccion.activa = not atraccion.activa # Invertimos el valor.
+            atraccion.save()  # Guardamos en la base de datos.
+            
+            if atraccion.activa:
+                print(f"INFO: La atraccion: {nombre} ha sido activada")
+            else:
+                print(f"INFO: La atraccion: {nombre} se encuentra desactivada o inactiva.")
+        
+        else:
+            # Mensaje de error si la atracción no existe
+            print(f"ERROR: No se encontro ninguna atraccion con el nombre: {nombre}")

@@ -226,6 +226,8 @@ class Visitantes:
                 break
             else:
                 print("INFO: Debes responder (S)i / (N)o")
+    
+    # METODOS NO RELACIONADOS CON EL CRUD:
 
 # Clase Atracciones
 # Agrupa toda la lógica relacionada con la gestión de las atracciones:
@@ -240,6 +242,7 @@ class Atracciones:
             print("2. Listar todas las atracciones.")
             print("3. Buscar atraccion por nombre.")
             print("4. Eliminar atraccion.")
+            print("5. Cambiar el estado de la atraccion.")
             print("0. Volver al menú principal.")
             
             opcion = input("\n➤  Selecciona una opcion: ").strip()
@@ -253,6 +256,8 @@ class Atracciones:
                 Atracciones.buscar_nombre_atraccion()
             elif opcion == "4":
                 Atracciones.eliminar_atraccion()
+            elif opcion == "5":
+                Atracciones.cambiar_estado()
             elif opcion == "0":
                 break
             else:
@@ -474,6 +479,22 @@ class Atracciones:
             else:
                 print("INFO: Debes responder (S)i / (N)o")
 
+    # METODOS NO RELACIONADOS CON EL CRUD:
+    # MARCAR TICKET COMO USADO
+    @staticmethod
+    def cambiar_estado():
+         # Accedemos al repositorio de los tickets
+        listar_atraccion = AtraccionRepository.obtener_todos()
+        if listar_atraccion is False:
+            return
+        
+        while True:
+            nombre_atraccion = input("Introduce el nombre de la atraccion: ")
+            AtraccionRepository.cambiar_estado(nombre_atraccion)
+            break
+
+         
+
 # Clase Tickets
 # Agrupa toda la lógica relacionada con la gestión de tickets
 class Tickets:
@@ -691,7 +712,8 @@ class Tickets:
                     break # Salimos al cancelar
                 else:
                     print("INFO: Debes responder (S)i / (N)o")
-
+    
+    # METODOS NO RELACIONADOS CON EL CRUD:
     # MARCAR TICKET COMO USADO
     @staticmethod
     def marcar_ticket():
