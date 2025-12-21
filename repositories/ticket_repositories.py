@@ -1,6 +1,8 @@
 # IMPORTACIONES
 from models.tickets_model import TicketModel
 from models.visitante_model import VisitanteModel
+from models.atraccion_model import AtraccionModel
+
 from datetime import datetime, date
 
 # ICONOS: https://symbl.cc/es
@@ -122,4 +124,31 @@ class TicketRepository:
             return tickets
         else:
             print(f"INFO: El visitante {visitante.nombre} no tiene tickets.")
+            return False
+        
+    # TICKETS DE UNA ATRACCION ESPECIFICA
+    @staticmethod
+    def obtener_por_atraccion(atraccion_id):
+        # Buscamos la atracción por ID
+        atraccion = AtraccionModel.get_or_none(AtraccionModel.id == atraccion_id)
+        if not atraccion:
+            print(f"INFO: No existe la atracción con ID: {atraccion_id}")
+            return False
+
+        # Seleccionamos todos los tickets de la atracción
+        tickets = TicketModel.select().where(TicketModel.atraccion == atraccion)
+        if tickets.exists():
+            print(f"🧾 Tickets vendidos para la atracción {atraccion.nombre}:")
+            for recorrerTicket in tickets:
+                detalles = recorrerTicket.detalles_compra
+                print(
+                    f"ID Ticket: {recorrerTicket.id} | "
+                    f"Visitante: {recorrerTicket.visitante.nombre} | "
+                    f"Tipo: {recorrerTicket.tipo_ticket} | "
+                    f"Precio: {detalles.get('precio',0.0)} | "
+                    f"Usado: {'Si' if recorrerTicket.usado else 'No'}"
+                )
+            return tickets
+        else:
+            print(f"INFO: No se han vendido tickets para la atracción {atraccion.nombre}.")
             return False

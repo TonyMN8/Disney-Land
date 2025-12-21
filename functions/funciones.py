@@ -510,6 +510,7 @@ class Tickets:
             print("4. Eliminar ticket.")
             print("5. Marcar ticket.")
             print("6. Mostrar tickets de los visitantes.")
+            print("7. Mostrar tickets de una atraccion.")
             print("0. Volver al menú principal.")
             
             opcion = input("\n➤ Selecciona una opcion: ").strip()
@@ -527,6 +528,8 @@ class Tickets:
                 Tickets.marcar_ticket()
             elif opcion == "6":
                 Tickets.tickets_visitante()
+            elif opcion == "7":
+                Tickets.tickets_atraccion()
             elif opcion == "0":
                 break
             else:
@@ -728,6 +731,8 @@ class Tickets:
 
             except Exception:
                 print("ERROR: Introduce un ID correcto.")
+    
+    # OBTENER LOS TICKETS DE UN VISITANTE
     @staticmethod
     def tickets_visitante():
         print("🧾 CONSULTA: Tickets de un visitante específico")
@@ -739,7 +744,27 @@ class Tickets:
         try:
             visitante_id = int(input("Introduce el ID del visitante: ").strip())
         except ValueError:
-            print("ERROR: Debes ingresar un ID valido.")
+            print("ERROR: Introduce un ID correcto.")
             return
         
         TicketRepository.obtener_por_visitante(visitante_id)
+
+    # OBTENER LOS TICKETS DE UNA ATRACCION
+    @staticmethod
+    def tickets_atraccion():
+        print("🧾 CONSULTA: Tickets vendidos para una atraccion")
+        # Listamos todas las atracciones
+        atracciones = AtraccionRepository.obtener_todos()
+        if not atracciones:
+            print("INFO: No hay atracciones registradas.")
+            return
+        
+        while True:
+            atraccion_id_input = input("Introduce el ID de la atraccion: ").strip()
+            if not atraccion_id_input.isdigit():
+                print("ERROR: Introduce un ID correcto.")
+            else:
+                atraccion_id = int(atraccion_id_input)
+                # Llamamos al repositorio si la ID es valida:
+                TicketRepository.obtener_por_atraccion(atraccion_id)
+                break 

@@ -53,7 +53,8 @@ class AtraccionRepository:
                 print(f"(-) Estado: {'Activa' if recorrerAtraccion.activa else 'Inactiva'}")
                 print(f"(-) Fecha de inauguración: {recorrerAtraccion.fecha_inauguracion}")
                 print("───────────────────────────────────────────────────────────────\n")
-  
+                
+            return atraccion
         else:
             print("INFO: No hay ninguna atraccion registrada.")
             return False # Retorno False en caso de que no haya atracciones.
