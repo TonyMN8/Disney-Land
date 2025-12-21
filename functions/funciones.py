@@ -487,6 +487,7 @@ class Tickets:
             print("2. Listar todos los tickets.")
             print("3. Buscar ticket por ID.")
             print("4. Eliminar ticket.")
+            print("5. Marcar ticket.")
             print("0. Volver al menú principal.")
             
             opcion = input("\n➤ Selecciona una opcion: ").strip()
@@ -500,6 +501,8 @@ class Tickets:
                 Tickets.buscar_id_ticket()
             elif opcion == "4":
                 Tickets.eliminar_ticket()
+            elif opcion == "5":
+                Tickets.marcar_ticket()
             elif opcion == "0":
                 break
             else:
@@ -691,18 +694,12 @@ class Tickets:
 
     # MARCAR TICKET COMO USADO
     @staticmethod
-    def ticket_usado(ticket_id):
-        ticket = TicketModel.get_or_none(TicketModel.id == ticket_id)
-        if ticket:
-            if ticket.usado:
-                print("INFO: El ticket ya esta usado.")
-                return
-            else:
-                # Cambiamos las propiedades en memoria.
-                ticket.usado = True # Ticket usado = True
-                ticket.fecha_uso = datetime.now().replace(microsecond=0) # Cambiamos la fecha.
-                ticket.save() # Guardamos los cambios en la base de datos.
+    def marcar_ticket():
+        while True:
+            try:
+                ticket_id = int(input("Introduce la ID del ticket: "))
+                TicketRepository.ticket_usado(ticket_id)
+                break
 
-            print(f"INFO: El Ticket con ID {ticket_id} ha sido marcado como usado.")
-        else:
-            print(f"ERROR: No existe un ticket con ID: {ticket_id}")
+            except Exception:
+                print("ERROR: Introduce un ID correcto.")

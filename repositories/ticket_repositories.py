@@ -73,3 +73,25 @@ class TicketRepository:
             print(f"INFO: El ticket ID: {ticket_id} ha sido eliminado.")
         else:
             print(f"INFO: No existe un ticket con ID: {ticket_id}")
+
+
+    # MARCAR TICKET COMO USADO
+    @staticmethod
+    def ticket_usado(ticket_id):
+        ticket = TicketModel.get_or_none(TicketModel.id == ticket_id)
+        while True:
+            if ticket:
+                if ticket.usado:
+                    print("INFO: El ticket ya esta usado.")
+                    return
+                else:
+                    # Cambiamos las propiedades en memoria.
+                    ticket.usado = True # Ticket usado = True
+                    ticket.fecha_uso = datetime.now().replace(microsecond=0) # Cambiamos la fecha.
+                    ticket.save() # Guardamos los cambios en la base de datos.
+
+                    print(f"INFO: El Ticket con ID {ticket_id} ha sido marcado como usado.")
+                    break
+            else:
+                print(f"ERROR: No existe un ticket con ID: {ticket_id}")
+                return
