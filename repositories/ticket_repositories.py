@@ -31,18 +31,20 @@ class TicketRepository:
         if tickets:
             for ticket in tickets:
                 detalles = ticket.detalles_compra
-                print("───────────────────────────────────────────────────────────────────────────────")
+
                 print(f"🧾 TICKET ID: {ticket.id} | Visitante: {ticket.visitante.nombre} | "
                       f"Atraccion: {ticket.atraccion.nombre if ticket.atraccion else 'N/A'} | "
                       f"Tipo: {ticket.tipo_ticket}")
+                
                 print(f"(-) Fecha compra: {ticket.fecha_compra} | Fecha visita: {ticket.fecha_visita}")
                 print(f"(-) Usado: {'Si' if ticket.usado else 'No'} | Fecha uso: {ticket.fecha_uso if ticket.fecha_uso else 'N/A'}")
+                
                 print(f"(-) Detalles de compra: Precio {detalles.get('precio', 0.0)} | "
                       f"Descuentos: {', '.join(detalles.get('descuentos_aplicados', [])) if detalles.get('descuentos_aplicados') else 'Ninguno'} | "
                       f"Servicios extra: {', '.join(detalles.get('servicios_extra', [])) if detalles.get('servicios_extra') else 'Ninguno'} | "
                       f"Metodo pago: {detalles.get('metodo_pago', 'N/A')}")
-                print("───────────────────────────────────────────────────────────────\n")
-            return True
+            # Retornamos los tickets:
+            return tickets
         else:
             print("INFO: No hay tickets registrados.")
             return False
@@ -53,17 +55,17 @@ class TicketRepository:
         ticket = TicketModel.get_or_none(TicketModel.id == ticket_id)
         if ticket:
             detalles = ticket.detalles_compra
-            print("───────────────────────────────────────────────────────────────────────────────")
             print(f"🧾 TICKET ID: {ticket.id} | Visitante: {ticket.visitante.nombre} | "
                   f"Atraccion: {ticket.atraccion.nombre if ticket.atraccion else 'N/A'} | "
                   f"Tipo: {ticket.tipo_ticket}")
+                
             print(f"(-) Fecha compra: {ticket.fecha_compra} | Fecha visita: {ticket.fecha_visita}")
             print(f"(-) Usado: {'Si' if ticket.usado else 'No'} | Fecha uso: {ticket.fecha_uso if ticket.fecha_uso else 'N/A'}")
+                
             print(f"(-) Detalles de compra: Precio {detalles.get('precio', 0.0)} | "
-                  f"Descuentos: {', '.join(detalles.get('descuentos_aplicados', [])) if detalles.get('descuentos_aplicados') else 'Ninguno'} | "
-                  f"Servicios extra: {', '.join(detalles.get('servicios_extra', [])) if detalles.get('servicios_extra') else 'Ninguno'} | "
-                  f"Metodo pago: {detalles.get('metodo_pago', 'N/A')}")
-            print("───────────────────────────────────────────────────────────────\n")
+                      f"Descuentos: {', '.join(detalles.get('descuentos_aplicados', [])) if detalles.get('descuentos_aplicados') else 'Ninguno'} | "
+                      f"Servicios extra: {', '.join(detalles.get('servicios_extra', [])) if detalles.get('servicios_extra') else 'Ninguno'} | "
+                      f"Metodo pago: {detalles.get('metodo_pago', 'N/A')}")
         else:
             print(f"INFO: No existe un ticket con ID: {ticket_id}")
 
@@ -76,7 +78,6 @@ class TicketRepository:
             print(f"INFO: El ticket ID: {ticket_id} ha sido eliminado.")
         else:
             print(f"INFO: No existe un ticket con ID: {ticket_id}")
-
 
     # MARCAR TICKET COMO USADO
     @staticmethod
@@ -132,13 +133,13 @@ class TicketRepository:
         # Buscamos la atracción por ID
         atraccion = AtraccionModel.get_or_none(AtraccionModel.id == atraccion_id)
         if not atraccion:
-            print(f"INFO: No existe la atracción con ID: {atraccion_id}")
+            print(f"ERROR: No existe la atraccion: {atraccion}")
             return False
 
         # Seleccionamos todos los tickets de la atracción
         tickets = TicketModel.select().where(TicketModel.atraccion == atraccion)
         if tickets.exists():
-            print(f"🧾 Tickets vendidos para la atracción {atraccion.nombre}:")
+            print(f"🧾 Tickets vendidos: {atraccion.nombre}:")
             for recorrerTicket in tickets:
                 detalles = recorrerTicket.detalles_compra
                 print(
@@ -150,5 +151,20 @@ class TicketRepository:
                 )
             return tickets
         else:
-            print(f"INFO: No se han vendido tickets para la atracción {atraccion.nombre}.")
+            print(f"INFO: No se ha vendido ningun Ticket para la atraccion: {atraccion.nombre}.")
             return False
+
+    # CAMBIAR EL PRECIO DE UN TICKET.
+    @staticmethod
+    def cambiar_precio(ticket_id, nuevo_precio):
+        ticket = TicketModel.get_or_none(TicketModel.id == ticket_id)
+        if not ticket:
+            print(f"ERROR: No existe un ticket con ID: {ticket_id}")
+            return
+        
+        # Cambiamos las propiedades en memoria.
+        detalles = ticket.detalles_compra
+        detalles["precio"] = nuevo_precio # Cambiamos el precio
+        ticket.detalles_compra = detalles  # Guardamos los cambios en el modelo
+        ticket.save() 
+        print(f"El precio del ticket ID: {ticket_id} ha sido cambiado: {nuevo_precio}$")
