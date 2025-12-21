@@ -99,6 +99,7 @@ class Visitantes:
             print("2. Listar todos los visitantes.")
             print("3. Buscar visitante por email.")
             print("4. Eliminar visitante.")
+            print("5. Añadir visita al historial del visitante.")
             print("0. Volver al menú principal.")
             
             opcion = input("\n➤  Selecciona una opcion: ").strip()
@@ -112,6 +113,8 @@ class Visitantes:
                 Visitantes.buscar_por_email()
             elif opcion == "4":
                 Visitantes.eliminar_visitante()
+            elif opcion == "5":
+               Visitantes.anadir_visita()
             elif opcion == "0":
                 break
             else:
@@ -247,7 +250,6 @@ class Visitantes:
     @staticmethod
     def eliminar_visitante():
         listar_visitantes = VisitanteRepository.obtener_todos()
-
         if not listar_visitantes:
             return
 
@@ -271,7 +273,49 @@ class Visitantes:
                 print("INFO: Debes responder (S)i / (N)o")
     
     # METODOS NO RELACIONADOS CON EL CRUD:
-  
+    # ANADIR VISITA AL HISTORIAL DE UN VISITANTE
+    @staticmethod
+    def anadir_visita():
+        # Mostramos todos los visitantes
+        visitantes = VisitanteRepository.obtener_todos()
+        if not visitantes:
+            print("INFO: No hay visitantes registrados.")
+            return
+        
+        while True:
+            try:
+                visitante_id = int(input("Introduce la ID del visitante: "))
+                break
+            except Exception:
+                print("ERROR: Introduce una ID valida.")
+
+        # Fecha de la visita
+        while True:
+            fecha = input("Introduce la fecha de la visita (YYYY-MM-DD): ").strip()
+            try:
+                datetime.strptime(fecha, "%Y-%m-%d")
+                break
+            except Exception:
+                print("ERROR: Fecha no valida. Formato correcto: YYYY-MM-DD")
+
+        # Numero de atracciones visitadas
+        while True:
+            try:
+                atracciones_visitadas = int(input("Numero de atracciones visitadas: "))
+                if atracciones_visitadas >= 0:
+                    break
+                else:
+                    print("ERROR: El numero no puede ser negativo.")
+            except Exception:
+                print("ERROR: Introduce un numero valido.")
+
+        # Llamamos al repositorio
+        VisitanteRepository.anadir_visita(
+            visitante_id,
+            fecha,
+            atracciones_visitadas
+        )
+
 # Clase Atracciones
 # Agrupa toda la lógica relacionada con la gestión de las atracciones:
 # mostrar menú, crear, listar, buscar, eliminar atracciones, etc.
@@ -536,8 +580,6 @@ class Atracciones:
             AtraccionRepository.cambiar_estado(nombre_atraccion)
             break
 
-         
-
 # Clase Tickets
 # Agrupa toda la lógica relacionada con la gestión de tickets
 class Tickets:
@@ -554,6 +596,7 @@ class Tickets:
             print("5. Marcar ticket.")
             print("6. Mostrar tickets de los visitantes.")
             print("7. Mostrar tickets de una atraccion.")
+            print("8. Cambiar el precio de un ticket. ")
             print("0. Volver al menú principal.")
             
             opcion = input("\n➤ Selecciona una opcion: ").strip()
@@ -573,6 +616,8 @@ class Tickets:
                 Tickets.tickets_visitante()
             elif opcion == "7":
                 Tickets.tickets_atraccion()
+            elif opcion == "8":
+                Tickets.cambiar_precio_ticket()
             elif opcion == "0":
                 break
             else:
@@ -810,4 +855,22 @@ class Tickets:
                 atraccion_id = int(atraccion_id_input)
                 # Llamamos al repositorio si la ID es valida:
                 TicketRepository.obtener_por_atraccion(atraccion_id)
-                break 
+                break
+
+    # CAMBIAR PRECIO DE UN TICKET
+    @staticmethod
+    def cambiar_precio_ticket():
+        tickets = TicketRepository.obtener_todos() # Mostramos todos los tickets
+        if not tickets:
+            print("INFO: No hay tickets.")
+            return
+        
+        while True:
+            try:
+                ticket_id = int(input("Introdue la ID del ticket: "))
+                nuevo_precio = float(input("Introduce el nuevo precio: "))
+                break
+            except Exception:
+                print("ERROR: Ingresa un numero valido.")
+
+        TicketRepository.cambiar_precio(ticket_id, nuevo_precio)

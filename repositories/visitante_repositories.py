@@ -34,7 +34,7 @@ class VisitanteRepository:
         if not visitantes:
             print("INFO: No hay visitantes registrados.")
             return
-        
+        # Recorremos los visitantes para mostrarlos.
         for recorrerVisitantes in visitantes:
             pref = recorrerVisitantes.preferencias or {"tipo_favorito": "", "restricciones": [], "historial_visitas": []}
             print(f"ID: {recorrerVisitantes.id} | Nombre: {recorrerVisitantes.nombre} | Email: {recorrerVisitantes.email}")
@@ -50,7 +50,7 @@ class VisitanteRepository:
             else:
                 print("Historial visitas: Ninguno")
             print("------------------------------")
-        
+        # Retornamos los visitantes:
         return visitantes
 
     # OBTENER UN VISITANTE POR SU CORREO ELECTRÓNICO
@@ -60,7 +60,7 @@ class VisitanteRepository:
         if not visitantes:
             print(f"ERROR: No existe ningun visitante registrado con ese correo: {visitante_correo}")
             return None
-
+        # Recorremos al visitante.
         for recorrerVisitantes in visitantes:
             pref = recorrerVisitantes.preferencias or {"tipo_favorito": "", "restricciones": [], "historial_visitas": []}
             print(f"ID: {recorrerVisitantes.id} | Nombre: {recorrerVisitantes.nombre} | Email: {recorrerVisitantes.email}")
@@ -76,7 +76,7 @@ class VisitanteRepository:
             else:
                 print("Historial visitas: Ninguno")
             print("------------------------------")
-
+        # Retornamos los visitantes:
         return visitantes
 
     # ELIMINAR UN VISITANTE POR SU ID:
@@ -91,4 +91,36 @@ class VisitanteRepository:
             eliminado = True
         if not eliminado:
             print(f"INFO: El visitante con ID: {visitante_id} no ha sido encontrado.")
+
+    # ANADIR UNA NUEVA VISITA AL HISTORIAL DEL VISITANTE
+    @staticmethod
+    def anadir_visita(visitante_id, fecha, atracciones_visitadas):
+        # Buscamos al visitante por ID
+        visitante = VisitanteModel.get_or_none(VisitanteModel.id == visitante_id)
+        if not visitante:
+            print(f"ERROR: No existe un visitante con ID {visitante_id}")
+            return
+
+        # Obtenemos las preferencias (JSON)
+        preferencias = visitante.preferencias
+
+        # Si no existe el historial, lo creamos
+        if "historial_visitas" not in preferencias:
+            preferencias["historial_visitas"] = []
+
+        # Creamos la nueva visita
+        nueva_visita = {
+            "fecha": fecha,
+            "atracciones_visitadas": atracciones_visitadas
+        }
+
+        # Anadimos la visita al historial
+        preferencias["historial_visitas"].append(nueva_visita)
+
+        # Guardamos los cambios
+        visitante.preferencias = preferencias
+        visitante.save()
+
+        print("INFO: Se ha añadido una visita nueva al visitante.")
+
 
