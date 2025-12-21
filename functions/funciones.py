@@ -228,7 +228,7 @@ class Visitantes:
                 print("INFO: Debes responder (S)i / (N)o")
     
     # METODOS NO RELACIONADOS CON EL CRUD:
-
+  
 # Clase Atracciones
 # Agrupa toda la lógica relacionada con la gestión de las atracciones:
 # mostrar menú, crear, listar, buscar, eliminar atracciones, etc.
@@ -509,6 +509,7 @@ class Tickets:
             print("3. Buscar ticket por ID.")
             print("4. Eliminar ticket.")
             print("5. Marcar ticket.")
+            print("6. Mostrar tickets de los visitantes.")
             print("0. Volver al menú principal.")
             
             opcion = input("\n➤ Selecciona una opcion: ").strip()
@@ -524,6 +525,8 @@ class Tickets:
                 Tickets.eliminar_ticket()
             elif opcion == "5":
                 Tickets.marcar_ticket()
+            elif opcion == "6":
+                Tickets.tickets_visitante()
             elif opcion == "0":
                 break
             else:
@@ -725,3 +728,18 @@ class Tickets:
 
             except Exception:
                 print("ERROR: Introduce un ID correcto.")
+    @staticmethod
+    def tickets_visitante():
+        print("🧾 CONSULTA: Tickets de un visitante específico")
+        visitantes = VisitanteRepository.obtener_todos()
+        if not visitantes:
+            print("INFO: No hay visitantes registrados.")
+            return
+        
+        try:
+            visitante_id = int(input("Introduce el ID del visitante: ").strip())
+        except ValueError:
+            print("ERROR: Debes ingresar un ID valido.")
+            return
+        
+        TicketRepository.obtener_por_visitante(visitante_id)

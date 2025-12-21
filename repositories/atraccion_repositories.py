@@ -122,5 +122,4 @@ class AtraccionRepository:
                 print(f"INFO: La atraccion: {nombre} se encuentra desactivada o inactiva.")
         
         else:
-            # Mensaje de error si la atracción no existe
             print(f"ERROR: No se encontro ninguna atraccion con el nombre: {nombre}")

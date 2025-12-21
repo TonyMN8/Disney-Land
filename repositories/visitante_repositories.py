@@ -1,6 +1,7 @@
 # IMPORTACIONES.
 # Modelos relacionados con otras clases:
 from models.visitante_model import VisitanteModel
+from models.tickets_model import TicketModel
 # from models.tickets_model import TicketModel
 
 class VisitanteRepository:
@@ -45,9 +46,11 @@ class VisitanteRepository:
                     f"Restricciones: {preferencia.get('restricciones')}, "
                     f"Historial visitas: {preferencia.get('historial_visitas')}"
                     )
+                
+            return visitantes
         else:
             print("INFO: No hay ningun visitante registrado.")
-            return
+            return 
    
     # OBTENER UN VISITANTE POR SU CORREO ELECTRONICO:
     @staticmethod
@@ -75,11 +78,13 @@ class VisitanteRepository:
     # ELIMINAR UN VISITANTE POR SU ID:
     @staticmethod
     def eliminar(visitante_id):
+        # Seleccionamos todos los visitantes
         visitantes = VisitanteModel.select().where(VisitanteModel.id == visitante_id)
-        eliminado = False
+        eliminado = False # Control si se elimina un visitante
         for recorrerVisitantes in visitantes:
-            recorrerVisitantes.delete_instance()
+            recorrerVisitantes.delete_instance() # Eliminamos el visitante y todos sus tickets asociados
             print(f"INFO: El visitante: {recorrerVisitantes.nombre} ha sido eliminado.")
             eliminado = True
         if not eliminado:
             print(f"INFO: El visitante con ID: {visitante_id} no ha sido encontrado.")
+
