@@ -497,7 +497,7 @@ class Tickets:
             elif opcion == "2":
                 Tickets.listar_tickets()
             elif opcion == "3":
-                Tickets.buscar_ticket_id()
+                Tickets.buscar_id_ticket()
             elif opcion == "4":
                 Tickets.eliminar_ticket()
             elif opcion == "0":
@@ -652,3 +652,39 @@ class Tickets:
             return
 
         print("🧾 MENU TICKETS: LISTA DE TODOS LOS TICKETS:")
+
+    # ____ BUSCAR TICKET POR ID ____
+    @staticmethod
+    def buscar_id_ticket():
+        try:
+            id_ticket = int(input("Introduce la ID del ticket: ").strip())
+            TicketRepository.obtener_por_id(id_ticket)
+        except Exception:
+            print("ERROR: Introduce un ID correcto.")
+
+    # ____ ELIMINAR TICKET ____
+    @staticmethod
+    def eliminar_ticket():
+        # Accedemos al repositorio de los tickets
+        listar_tickets = TicketRepository.obtener_todos()
+        if listar_tickets is False:
+            return
+        
+        while True:
+            id = input("Introduce la ID del ticket que quieres eliminar: ").strip()
+            
+            # Validamos el ID
+            if not id.isdigit():
+                print("ERROR: Introduce un ID correcto.")
+            else:
+                id_ticket = int(id)
+                confirm = input(f"Eliminar el ticket ID: {id_ticket}? (S)i / (N)o: ").strip().upper()
+                
+                if confirm == "S":
+                    TicketRepository.eliminar(id_ticket)
+                    break  # Salimos al eliminar
+                elif confirm == "N":
+                    print(f"INFO: Cancelas la operación, no se ha eliminado el ticket ID: {id_ticket}.")
+                    break # Salimos al cancelar
+                else:
+                    print("INFO: Debes responder (S)i / (N)o")
