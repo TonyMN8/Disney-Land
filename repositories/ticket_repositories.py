@@ -100,51 +100,49 @@ class TicketRepository:
                 print(f"ERROR: No existe un ticket con ID: {ticket_id}")
                 return
     
-    # TICKETS DE UN VISITANTE ESPECIFICO:
+    # TICKETS DE UN VISITANTE ESPECIFICO
     @staticmethod
     def obtener_por_visitante(visitante_id):
-        # Busco el visitante por ID:
         visitante = VisitanteModel.get_or_none(VisitanteModel.id == visitante_id)
         if not visitante:
             print(f"INFO: No existe el visitante con ID: {visitante_id}")
             return False
-        # Seleccionamos todos los visitantes relacionados
+
         tickets = TicketModel.select().where(TicketModel.visitante == visitante)
-        if tickets:
+        if tickets.exists():
             print(f"🧾 Tickets del visitante {visitante.nombre}:")
             for recorrerTickets in tickets:
-                detalles = recorrerTickets.detalles_compra
-                 # Mostramos información de cada ticket
+                detalles = recorrerTickets.detalles_compra or {}
+                atraccion_nombre = recorrerTickets.atraccion.nombre if recorrerTickets.atraccion else "Atraccion eliminada"
                 print(
                     f"ID Ticket: {recorrerTickets.id} | "
-                    f"Atraccion: {recorrerTickets.atraccion.nombre} | " 
+                    f"Atraccion: {atraccion_nombre} | "
                     f"Tipo: {recorrerTickets.tipo_ticket} | "
                     f"Precio: {detalles.get('precio',0.0)} | "
                     f"Usado: {'Si' if recorrerTickets.usado else 'No'}"
                 )
             return tickets
         else:
-            print(f"INFO: El visitante {visitante.nombre} no tiene tickets.")
+            print(f"INFO: El visitante {visitante.nombre} no tiene tickets registrados.")
             return False
-        
+
     # TICKETS DE UNA ATRACCION ESPECIFICA
     @staticmethod
     def obtener_por_atraccion(atraccion_id):
-        # Buscamos la atracción por ID
         atraccion = AtraccionModel.get_or_none(AtraccionModel.id == atraccion_id)
         if not atraccion:
-            print(f"ERROR: No existe la atraccion: {atraccion}")
+            print(f"ERROR: No existe la atraccion con ID: {atraccion_id}")
             return False
 
-        # Seleccionamos todos los tickets de la atracción
         tickets = TicketModel.select().where(TicketModel.atraccion == atraccion)
         if tickets.exists():
-            print(f"🧾 Tickets vendidos: {atraccion.nombre}:")
+            print(f"🧾 Tickets vendidos para {atraccion.nombre}:")
             for recorrerTicket in tickets:
-                detalles = recorrerTicket.detalles_compra
+                detalles = recorrerTicket.detalles_compra or {}
+                visitante_nombre = recorrerTicket.visitante.nombre if recorrerTicket.visitante else "Visitante eliminado"
                 print(
                     f"ID Ticket: {recorrerTicket.id} | "
-                    f"Visitante: {recorrerTicket.visitante.nombre} | "
+                    f"Visitante: {visitante_nombre} | "
                     f"Tipo: {recorrerTicket.tipo_ticket} | "
                     f"Precio: {detalles.get('precio',0.0)} | "
                     f"Usado: {'Si' if recorrerTicket.usado else 'No'}"

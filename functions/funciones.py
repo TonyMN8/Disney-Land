@@ -53,13 +53,17 @@ class MenuConsultas:
     def menu_consultas():
         while True:
             print("🔍 MENU: CONSULTAS")
-            print("\n1. Visitantes con preferencia por atracciones extremas.")
-            print("2. Atracciones con intensidad mayor a 7.")
-            print("3. Tickets tipo colegio con precio menor a 30.")
-            print("4. Atracciones con duracion mayor a 120 segundos.")
-            print("5. Atracciones con (looping) y (caida libre).")
-            print("6. Tickets con descuento (estudiante).")
-            print("7. Atracciones con al menos un horario de mantenimiento.")
+            print("01. Visitantes con preferencia por atracciones extremas.")
+            print("02. Atracciones con intensidad mayor a 7.")
+            print("03. Tickets tipo colegio con precio menor a 30.")
+            print("04. Atracciones con duracion mayor a 120 segundos.")
+            print("05. Atracciones con (looping) y (caida libre).")
+            print("06. Tickets con descuento (estudiante).")
+            print("07. Atracciones con al menos un horario de mantenimiento.")
+            print("08. Visitantes ordenados por cantidad total de tickets comprados.")
+            print("09. (5) Atracciones mas vendidas.")
+            print("10. Visitantes que han gastado mas de 100€.")
+            print("11. Atracciones comparibles para un visitante.")
             print("0. Volver al menu principal.")
             
             opcion = input("\n➤ Selecciona una opcion: ").strip()
@@ -79,6 +83,14 @@ class MenuConsultas:
                 Consultas.tickets_descuento()
             elif opcion == "7":
                 Consultas.atracciones_mantenimiento()
+            elif opcion == "8":
+                Consultas.visitantes_por_tickets()
+            elif opcion == "9":
+                Consultas.atracciones_vendidas()
+            elif opcion == "10":
+                Consultas.visitantes_mas_gastado()
+            elif opcion == "11":
+                Consultas.atracciones_compatibles()
             elif opcion == "0":
                 break
             else:
@@ -254,7 +266,6 @@ class Visitantes:
             return
 
         try:
-            listar_visitantes()
             visitante_id = int(input("Introduce la ID del visitante que vas a liminar: "))
         except ValueError:
             print("ERROR: Debes ingresar una ID valida.")

@@ -1,5 +1,3 @@
-# INGESTA CREADA CON IA
-
 import random
 from datetime import date, datetime, timedelta
 from repositories.visitante_repositories import VisitanteRepository
@@ -10,15 +8,34 @@ from models.atraccion_model import AtraccionModel
 
 def ingesta_masiva():
     # -----------------------------
-    # 1️⃣ Generar 100 visitantes
+    # 1️⃣ Generar visitantes reales
     # -----------------------------
+    nombres_reales = [
+        "Mateo", "Sofía", "Lucas", "Valeria", "Martín", "Emma", "Hugo",
+        "Lucía", "Daniel", "Julia", "Martina", "Leo", "Alejandro", "Camila",
+        "Pablo", "Valentina", "Diego", "Gabriela", "Gonzalo", "Mía",
+        "Antonio", "María", "Manuel", "Carlos", "Laura", "Elena", "Adrián",
+        "Clara", "Raúl", "Daniela", "Rubén", "Paula", "David", "Sara",
+        "Mario", "Carla", "Javier", "Andrea", "Óscar", "Natalia", "Luis",
+        "Irene", "Miguel", "Alba", "Ramiro", "Iker", "Matea", "Noah",
+        "Emma", "Oliver", "Amelia", "Isabella"
+    ]
+
+    apellidos = [
+        "García", "Martínez", "Rodríguez", "López", "Sánchez",
+        "Pérez", "Gómez", "Fernández", "Díaz", "Moreno", "Alonso",
+        "Romero", "Torres", "Ruiz", "Ramírez", "Vargas", "Ortiz", "Castillo"
+    ]
+
     tipos_favoritos = ["extrema", "familiar", "infantil", "acuatica"]
     restricciones_posibles = ["problemas_cardiacos", "embarazo", "miedo_altura", "ninguna"]
 
-    for i in range(1, 10):
-        nombre = f"Visitante_{i}"
-        email = f"visitante{i}@parque.com"
-        altura = random.randint(90, 200)  # altura entre 90 y 200 cm
+    for i in range(100):
+        nombre = random.choice(nombres_reales)
+        apellido = random.choice(apellidos)
+        nombre_completo = f"{nombre} {apellido}"
+        email = f"{nombre.lower()}.{apellido.lower()}{random.randint(1,999)}@mail.com"
+        altura = random.randint(90, 200)
         preferencias = {
             "tipo_favorito": random.choice(tipos_favoritos),
             "restricciones": random.sample(restricciones_posibles, k=random.randint(0, 2)),
@@ -29,26 +46,31 @@ def ingesta_masiva():
                 } for _ in range(random.randint(0, 5))
             ]
         }
-        VisitanteRepository.crear_visitante(nombre, email, altura, preferencias)
+        VisitanteRepository.crear_visitante(nombre_completo, email, altura, preferencias)
 
     # -----------------------------
     # 2️⃣ Generar 20 atracciones
     # -----------------------------
     tipos_atraccion = ["extrema", "familiar", "infantil", "acuatica"]
-    caracteristicas_posibles = ["looping", "caida_libre", "giro_360", "tranquilo", "paisaje", "tobogán", "columpios", "agua", "oscuridad", "vuelo"]
+    caracteristicas_posibles = [
+        "looping", "caida_libre", "giro_360", "tranquilo", "paisaje",
+        "tobogán", "columpios", "agua", "oscuridad", "vuelo"
+    ]
 
     for i in range(1, 21):
         nombre = f"Atraccion_{i}"
         tipo = random.choice(tipos_atraccion)
         altura_minima = random.randint(80, 180)
-        duracion = random.randint(30, 300)  # segundos
+        duracion = random.randint(30, 300)
         capacidad = random.randint(10, 50)
         intensidad = random.randint(1, 10)
         caracteristicas = random.sample(caracteristicas_posibles, k=random.randint(1, 4))
         horarios = {
             "apertura": f"{random.randint(8, 11)}:00",
             "cierre": f"{random.randint(18, 23)}:00",
-            "mantenimiento": [f"{random.randint(12, 16)}:00-{random.randint(12, 16)}:30"] if random.random() > 0.5 else []
+            "mantenimiento": [
+                f"{random.randint(12, 16)}:00-{random.randint(12, 16)}:30"
+            ] if random.random() > 0.5 else []
         }
         detalles = {
             "duracion_segundos": duracion,
@@ -57,8 +79,10 @@ def ingesta_masiva():
             "caracteristicas": caracteristicas,
             "horarios": horarios
         }
-        activa = random.choice([True, True, True, False])  # mayoría activas
-        AtraccionRepository.crear_atraccion(nombre, tipo, altura_minima, detalles, activa)
+        activa = random.choice([True, True, True, False])
+        AtraccionRepository.crear_atraccion(
+            nombre, tipo, altura_minima, detalles, activa
+        )
 
     # -----------------------------
     # 3️⃣ Generar tickets aleatorios
@@ -66,17 +90,16 @@ def ingesta_masiva():
     visitantes = list(VisitanteModel.select())
     atracciones = list(AtraccionModel.select())
     tipos_ticket = ["general", "colegio", "empleado"]
-    descuentos_posibles = ["estudiante", "early_bird", "ninguno"]
+    descuentos_posibles = ["estudiante", "early_bird"]
     servicios_posibles = ["fast_pass", "comida_incluida", "foto_recuerdo"]
 
     for visitante in visitantes:
-        # Cada visitante puede tener entre 0 y 2 tickets
         for _ in range(random.randint(0, 3)):
-            atraccion = random.choice(atracciones + [None])  # Algunos tickets generales
+            atraccion = random.choice(atracciones + [None])
             fecha_visita = date.today() + timedelta(days=random.randint(0, 90))
             tipo_ticket = random.choice(tipos_ticket)
             detalles_compra = {
-                "precio": round(random.uniform(0, 100), 2),
+                "precio": round(random.uniform(5, 100), 2),
                 "descuentos_aplicados": random.sample(descuentos_posibles, k=random.randint(0, 2)),
                 "servicios_extra": random.sample(servicios_posibles, k=random.randint(0, 2)),
                 "metodo_pago": random.choice(["efectivo", "tarjeta", "paypal"])

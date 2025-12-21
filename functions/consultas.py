@@ -3,6 +3,7 @@
 from models.visitante_model import VisitanteModel
 from models.atraccion_model import AtraccionModel
 from models.tickets_model import TicketModel
+from peewee import fn
 
 # Clase Consultas
 class Consultas:
@@ -103,4 +104,126 @@ class Consultas:
                 atraccion_existente = True
         if not atraccion_existente:
             print("INFO: No hay atracciones con mantenimiento programado")
+
+    # VISITANTES ORDENADORES POR CANTIDAD DE TICKETS
+    @staticmethod
+    def visitantes_por_tickets():
+        print("🧾 CONSULTA: Visitantes ordenados por cantidad de tickets comprados")
+
+        consulta = (VisitanteModel.select (VisitanteModel, fn.COUNT(TicketModel.id).alias("total_tickets"))
+            .join(TicketModel)
+            .group_by(VisitanteModel.id)
+            .order_by(fn.COUNT(TicketModel.id).desc())
+        )
+
+        if not consulta:
+            print("INFO: No hay visitantes con tickets")
+            return
+
+        for recorrerConsulta in consulta:
+            print(
+                f"ID: {recorrerConsulta.id} | "
+                f"Nombre: {recorrerConsulta.nombre} | "
+                f"Tickets comprados: {recorrerConsulta.total_tickets}"
+            )
+
+    # LAS 5 ATRACCIONES MAS VENDIDAS
+    @staticmethod
+    def atracciones_vendidas():
+        print("🧾 CONSULTA: 5 Atracciones mas vendidas")
+
+        consulta = (
+            AtraccionModel.select(AtraccionModel, fn.COUNT(TicketModel.id).alias("total_tickets"))
+            .join(TicketModel)
+            .where(TicketModel.atraccion.is_null(False))
+            .group_by(AtraccionModel.id)
+            .order_by(fn.COUNT(TicketModel.id).desc()).limit(5)
+        )
+
+        if not consulta:
+            print("INFO: No hay tickets vendidos para atracciones")
+            return
+
+        for recorrerConsulta in consulta:
+            print(
+                f"ID: {recorrerConsulta.id} | "
+                f"Nombre: {recorrerConsulta.nombre} | "
+                f"Tickets vendidos: {recorrerConsulta.total_tickets}"
+            )
+
+     # VISITANTES QUE HAN GASTADO MAS DE 100 EUROS
+    @staticmethod
+    def visitantes_mas_gastado():
+        print("🧾 CONSULTA: Visitantes que han gastado mas de 100 euros")
+
+        visitantes = VisitanteModel.select()
+        visitante_existente = False
+
+        for recorrerVisitantes in visitantes:
+            total_gastado = 0
+
+            # Recorremos los tickets del visitante
+            for recorrerTickets in recorrerVisitantes.tickets:
+                precio = recorrerTickets.detalles_compra.get("precio", 0)
+                total_gastado += precio
+
+            if total_gastado > 100:
+                print(
+                    f"ID: {recorrerVisitantes.id} | "
+                    f"Nombre: {recorrerVisitantes.nombre} | "
+                    f"Gastado: {total_gastado}€"
+                )
+                visitante_existente = True
+
+        if not visitante_existente:
+            print("INFO: No hay ningun visitante que supere los 100€ de gastos.")
+
+    # ATRACCIONES COMPATIBLES
+    @staticmethod
+    def atracciones_compatibles():
+        print("🧾 CONSULTA: Atracciones compatibles para un visitante")
+
+        # Obtenemos todos los visitantes
+        visitantes = VisitanteModel.select()
+        if not visitantes:
+            print("INFO: No hay visitantes registrados")
+            return
+
+        # Mostramos todos los visitantes para que el usuario seleccione
+        for visitante in visitantes:
+            print(f"ID: {visitante.id} | Nombre: {visitante.nombre}")
+
+        # Pedimos el ID del visitante
+        try:
+            visitante_id = int(input("Introduce el ID del visitante: "))
+        except ValueError:
+            print("ERROR: Introduce un número válido.")
+            return
+
+        # Buscamos al visitante
+        visitante = VisitanteModel.get_or_none(VisitanteModel.id == visitante_id)
+        if not visitante:
+            print("ERROR: Visitante no encontrado")
+            return
+
+        tipo_favorito = visitante.preferencias.get("tipo_favorito")
+        altura_visitante = visitante.altura
+
+        # Obtenemos todas las atracciones activas
+        atracciones = AtraccionModel.select().where(AtraccionModel.activa == True)
+        atraccion_existente = False
+
+        for atraccion in atracciones:
+            # Comprobamos tipo y altura
+            if atraccion.tipo == tipo_favorito and altura_visitante >= atraccion.altura_minima:
+                print(
+                    f"ID: {atraccion.id} | "
+                    f"Nombre: {atraccion.nombre} | "
+                    f"Tipo: {atraccion.tipo} | "
+                    f"Altura minima: {atraccion.altura_minima} cm"
+                )
+                atraccion_existente = True
+
+        if not atraccion_existente:
+            print("INFO: No hay atracciones compatibles para este visitante")
 

@@ -82,14 +82,11 @@ class VisitanteRepository:
     # ELIMINAR UN VISITANTE POR SU ID:
     @staticmethod
     def eliminar(visitante_id):
-        # Seleccionamos todos los visitantes
-        visitantes = VisitanteModel.select().where(VisitanteModel.id == visitante_id)
-        eliminado = False # Control si se elimina un visitante
-        for recorrerVisitantes in visitantes:
-            recorrerVisitantes.delete_instance() # Eliminamos el visitante y todos sus tickets asociados
-            print(f"INFO: El visitante: {recorrerVisitantes.nombre} ha sido eliminado.")
-            eliminado = True
-        if not eliminado:
+        try:
+            visitante = VisitanteModel.get(VisitanteModel.id == visitante_id)
+            visitante.delete_instance()
+            print(f"INFO: El visitante: {visitante.nombre} ha sido eliminado.")
+        except Exception:
             print(f"INFO: El visitante con ID: {visitante_id} no ha sido encontrado.")
 
     # ANADIR UNA NUEVA VISITA AL HISTORIAL DEL VISITANTE
