@@ -688,3 +688,21 @@ class Tickets:
                     break # Salimos al cancelar
                 else:
                     print("INFO: Debes responder (S)i / (N)o")
+
+    # MARCAR TICKET COMO USADO
+    @staticmethod
+    def ticket_usado(ticket_id):
+        ticket = TicketModel.get_or_none(TicketModel.id == ticket_id)
+        if ticket:
+            if ticket.usado:
+                print("INFO: El ticket ya esta usado.")
+                return
+            else:
+                # Cambiamos las propiedades en memoria.
+                ticket.usado = True # Ticket usado = True
+                ticket.fecha_uso = datetime.now().replace(microsecond=0) # Cambiamos la fecha.
+                ticket.save() # Guardamos los cambios en la base de datos.
+
+            print(f"INFO: El Ticket con ID {ticket_id} ha sido marcado como usado.")
+        else:
+            print(f"ERROR: No existe un ticket con ID: {ticket_id}")
