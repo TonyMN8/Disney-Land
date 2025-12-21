@@ -23,13 +23,14 @@ class MenuPrincipal:
     def menu_principal():
         while True:
             print("───────────────────────────────────────────────────────────────────────────────")
-            print("🎠 DISNEY LAND")
+            print("🎠 PARQUE DE ATRACCIONES: DISNEY LAND")
             print("1. MENU VISITANTES.")
             print("2. MENU ATRACCIONES.")
             print("3. MENU TICKETS.")
             print("4. MENU CONSULTAS.")
-            print("0. Cerrar el programa")
-            print("───────────────────────────────────────────────────────────────────────────────")  
+            print("0. CERRAR EL PROGRAMA.")
+            print("───────────────────────────────────────────────────────────────────────────────")
+            print("© 2025 TonyMN8.")
             opcion = input("\n➤  Selecciona una opcion: ").strip()
             print("")
                 
@@ -148,22 +149,21 @@ class Visitantes:
             else:
                 print("ERROR: El nombre no puede estar vacio")
 
-        # VALIDAR EMAIL:
         while True:
             email = input("Email del visitante: ").strip()
 
             # Obtenemos el email mediante el modelo.
-            email_existente =  VisitanteModel.get_or_none(VisitanteModel.email == email)
-            # Validacion email repetido:
+            email_existente = VisitanteModel.get_or_none(VisitanteModel.email == email)
+
+            # Validación email repetido:
             if email_existente:
                 print(f"ERROR: El email: {email} ya existe.")
-            # Validacion '@' y '.':
-            if "@" in email and "." in email:
-                # Si el email contiene "@" y "." rompemos el bucle.
-                break
-
-            else:
+            # Validación '@' y '.':
+            elif "@" not in email or "." not in email:
                 print("ERROR: El email debe contener '@' y '.'")
+            else:
+                # Si pasa ambas validaciones, rompemos el bucle
+                break
         
         # VALIDAR ALTURA (cm):
         while True:

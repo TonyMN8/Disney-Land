@@ -92,14 +92,17 @@ class VisitanteRepository:
     # ANADIR UNA NUEVA VISITA AL HISTORIAL DEL VISITANTE
     @staticmethod
     def anadir_visita(visitante_id, fecha, atracciones_visitadas):
+
         # Buscamos al visitante por ID
         visitante = VisitanteModel.get_or_none(VisitanteModel.id == visitante_id)
         if not visitante:
             print(f"ERROR: No existe un visitante con ID {visitante_id}")
             return
 
-        # Obtenemos las preferencias (JSON)
+        # Aseguramos que 'preferencias' sea un diccionario
         preferencias = visitante.preferencias
+        if not preferencias:
+            preferencias = {}
 
         # Si no existe el historial, lo creamos
         if "historial_visitas" not in preferencias:
@@ -111,13 +114,18 @@ class VisitanteRepository:
             "atracciones_visitadas": atracciones_visitadas
         }
 
-        # Anadimos la visita al historial
-        preferencias["historial_visitas"].append(nueva_visita)
+        # Intentamos añadir la visita al historial
+        try:
+            preferencias["historial_visitas"].append(nueva_visita)
+        except Exception:
+            # Si falla, reiniciamos la lista y añadimos la visita
+            preferencias["historial_visitas"] = [nueva_visita]
 
         # Guardamos los cambios
         visitante.preferencias = preferencias
         visitante.save()
 
-        print("INFO: Se ha añadido una visita nueva al visitante.")
+        print("INFO: Se ha añadido correctamente la visita al historial del visitante.")
+
 
 

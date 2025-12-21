@@ -1,5 +1,5 @@
 import random
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta, date
 from repositories.visitante_repositories import VisitanteRepository
 from repositories.atraccion_repositories import AtraccionRepository
 from repositories.ticket_repositories import TicketRepository
@@ -8,33 +8,25 @@ from models.atraccion_model import AtraccionModel
 
 def ingesta_masiva():
     # -----------------------------
-    # 1️⃣ Generar visitantes reales
+    # 1️⃣ Generar 200 visitantes
     # -----------------------------
-    nombres_reales = [
-        "Mateo", "Sofía", "Lucas", "Valeria", "Martín", "Emma", "Hugo",
-        "Lucía", "Daniel", "Julia", "Martina", "Leo", "Alejandro", "Camila",
-        "Pablo", "Valentina", "Diego", "Gabriela", "Gonzalo", "Mía",
-        "Antonio", "María", "Manuel", "Carlos", "Laura", "Elena", "Adrián",
-        "Clara", "Raúl", "Daniela", "Rubén", "Paula", "David", "Sara",
-        "Mario", "Carla", "Javier", "Andrea", "Óscar", "Natalia", "Luis",
-        "Irene", "Miguel", "Alba", "Ramiro", "Iker", "Matea", "Noah",
-        "Emma", "Oliver", "Amelia", "Isabella"
-    ]
-
-    apellidos = [
-        "García", "Martínez", "Rodríguez", "López", "Sánchez",
-        "Pérez", "Gómez", "Fernández", "Díaz", "Moreno", "Alonso",
-        "Romero", "Torres", "Ruiz", "Ramírez", "Vargas", "Ortiz", "Castillo"
-    ]
-
+    nombres = ["Mateo", "Sofía", "Lucas", "Valeria", "Martín", "Emma", "Hugo", "Lucía",
+               "Daniel", "Julia", "Martina", "Leo", "Alejandro", "Camila", "Pablo", "Valentina",
+               "Diego", "Gabriela", "Gonzalo", "Mía", "Antonio", "María", "Manuel", "Carlos",
+               "Laura", "Elena", "Adrián", "Clara", "Raúl", "Daniela", "Rubén", "Paula", "David",
+               "Sara", "Mario", "Carla", "Javier", "Andrea", "Óscar", "Natalia", "Luis", "Irene",
+               "Miguel", "Alba", "Ramiro", "Iker", "Matea", "Noah", "Oliver", "Amelia", "Isabella"]
+    apellidos = ["García", "Martínez", "Rodríguez", "López", "Sánchez", "Pérez", "Gómez",
+                 "Fernández", "Díaz", "Moreno", "Alonso", "Romero", "Torres", "Ruiz", "Ramírez",
+                 "Vargas", "Ortiz", "Castillo"]
     tipos_favoritos = ["extrema", "familiar", "infantil", "acuatica"]
     restricciones_posibles = ["problemas_cardiacos", "embarazo", "miedo_altura", "ninguna"]
 
-    for i in range(100):
-        nombre = random.choice(nombres_reales)
+    for _ in range(200):
+        nombre = random.choice(nombres)
         apellido = random.choice(apellidos)
         nombre_completo = f"{nombre} {apellido}"
-        email = f"{nombre.lower()}.{apellido.lower()}{random.randint(1,999)}@mail.com"
+        email = f"{nombre.lower()}.{apellido.lower()}{random.randint(1,9999)}@mail.com"
         altura = random.randint(90, 200)
         preferencias = {
             "tipo_favorito": random.choice(tipos_favoritos),
@@ -49,16 +41,22 @@ def ingesta_masiva():
         VisitanteRepository.crear_visitante(nombre_completo, email, altura, preferencias)
 
     # -----------------------------
-    # 2️⃣ Generar 20 atracciones
+    # 2️⃣ Generar 30 atracciones con nombres reales
     # -----------------------------
-    tipos_atraccion = ["extrema", "familiar", "infantil", "acuatica"]
-    caracteristicas_posibles = [
-        "looping", "caida_libre", "giro_360", "tranquilo", "paisaje",
-        "tobogán", "columpios", "agua", "oscuridad", "vuelo"
+    nombres_atracciones = [
+        "Shambhala", "Red Force", "Batman Gotham City Escape", "Dragon Khan", "Furius Baco",
+        "Hurakan Condor", "Stampida", "Sea Odyssey", "Silver Star", "Tibidabo Express",
+        "Montaña Rusa", "Superman el Último Escape", "Blue Fire", "Kingda Ka", "Top Thrill Dragster",
+        "The Smiler", "Nemesis", "Oblivion", "Expedition GeForce", "Black Mamba",
+        "Intimidator 305", "Magnum XL-200", "Goliath", "El Toro", "Bizarro", "Leviathan",
+        "Hydra the Revenge", "Steel Vengeance", "Maverick", "Twisted Colossus"
     ]
 
-    for i in range(1, 21):
-        nombre = f"Atraccion_{i}"
+    tipos_atraccion = ["extrema", "familiar", "infantil", "acuatica"]
+    caracteristicas_posibles = ["looping", "caida_libre", "giro_360", "tranquilo", "paisaje",
+                                "tobogán", "columpios", "agua", "oscuridad", "vuelo"]
+
+    for nombre in nombres_atracciones:
         tipo = random.choice(tipos_atraccion)
         altura_minima = random.randint(80, 180)
         duracion = random.randint(30, 300)
@@ -80,12 +78,10 @@ def ingesta_masiva():
             "horarios": horarios
         }
         activa = random.choice([True, True, True, False])
-        AtraccionRepository.crear_atraccion(
-            nombre, tipo, altura_minima, detalles, activa
-        )
+        AtraccionRepository.crear_atraccion(nombre, tipo, altura_minima, detalles, activa)
 
     # -----------------------------
-    # 3️⃣ Generar tickets aleatorios
+    # 3️⃣ Generar tickets optimizados
     # -----------------------------
     visitantes = list(VisitanteModel.select())
     atracciones = list(AtraccionModel.select())
@@ -113,4 +109,4 @@ def ingesta_masiva():
                 usado=random.choice([True, False])
             )
 
-    print("✅ Ingesta masiva completada.")
+    print("✅ Ingesta masiva completada: 200 visitantes, 30 atracciones, tickets generados.")
